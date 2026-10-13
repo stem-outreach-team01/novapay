@@ -38,6 +38,10 @@
       text-align: left;
     }
     .door:hover { transform: translateY(-2px); }
+    .door:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
 
     .door-1:hover { border-color: rgba(0,200,150,0.5); background: #16241F; }
     .door-2:hover { border-color: rgba(108,99,255,0.5); background: #1A1B33; }
@@ -55,42 +59,42 @@
 </head>
 <body>
 
-  <div class="wrap">
+  <main class="wrap">
     <div class="logo">nova<span>pay</span></div>
-    <div class="title">Where do you need to start?</div>
-    <div class="subtitle">Pick one. That's the only decision on this page — everything you actually need is behind it, in order.</div>
+    <h1 class="title">Where do you need to start?</h1>
+    <p class="subtitle">Pick one. That's the only decision on this page — everything you actually need is behind it, in order.</p>
 
-    <div class="doors">
-      <a class="door door-1" href="student-index.html">
-        <div class="door-icon">🎓</div>
+    <div class="doors" aria-label="Workshop navigation options">
+      <a class="door door-1" href="student-index.html" aria-label="I'm a student. Today's agenda and everything you need for the session.">
+        <div class="door-icon" aria-hidden="true">🎓</div>
         <div class="door-body">
           <div class="door-title">I'm a student</div>
           <div class="door-desc">Today's agenda and everything you need for the session.</div>
         </div>
-        <div class="door-arrow">→</div>
+        <div class="door-arrow" aria-hidden="true">→</div>
       </a>
 
-      <a class="door door-2" href="run-the-session.html">
-        <div class="door-icon">🧑‍🏫</div>
+      <a class="door door-2" href="run-the-session.html" aria-label="I'm running today's session. The script, the screens, and the if this breaks, do this card.">
+        <div class="door-icon" aria-hidden="true">🧑‍🏫</div>
         <div class="door-body">
           <div class="door-title">I'm running today's session</div>
           <div class="door-desc">The script, the screens, and the "if this breaks, do this" card.</div>
         </div>
-        <div class="door-arrow">→</div>
+        <div class="door-arrow" aria-hidden="true">→</div>
       </a>
 
-      <a class="door door-3" href="admin-setup.html">
-        <div class="door-icon">🛠️</div>
+      <a class="door door-3" href="admin-setup.html" aria-label="I'm setting this up. GitHub org, Copilot seats, and Nova install before the day itself.">
+        <div class="door-icon" aria-hidden="true">🛠️</div>
         <div class="door-body">
           <div class="door-title">I'm setting this up</div>
           <div class="door-desc">GitHub org, Copilot seats, Nova install — before the day itself.</div>
         </div>
-        <div class="door-arrow">→</div>
+        <div class="door-arrow" aria-hidden="true">→</div>
       </a>
     </div>
 
     <div class="footer-note">Not sure? Start with <strong>"I'm setting this up"</strong> if the session hasn't happened yet.</div>
-  </div>
+  </main>
 
 </body>
 </html>
