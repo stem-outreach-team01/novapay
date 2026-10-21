@@ -247,6 +247,7 @@
     .top-grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
     .support { display: block; font: var(--md-sys-typescale-body-small); letter-spacing: var(--md-sys-typescale-body-small-tracking); color: var(--md-sys-color-on-surface-variant); padding: var(--space-1) var(--space-4) 0; }
     .hint { font: var(--md-sys-typescale-body-small); letter-spacing: var(--md-sys-typescale-body-small-tracking); color: var(--md-sys-color-on-surface-variant); }
+    .act form[data-form="add"] > .hint, .act form[data-form="withdraw"] > .hint { margin-top: var(--space-3); }
     .err { font: var(--md-sys-typescale-body-small); letter-spacing: var(--md-sys-typescale-body-small-tracking); color: var(--md-sys-color-error); min-height: 1rem; margin-top: var(--space-1); }
     .msg { font: var(--md-sys-typescale-title-small); letter-spacing: var(--md-sys-typescale-title-small-tracking); color: var(--md-sys-color-on-surface); }
 
@@ -378,6 +379,8 @@
     .bar > span { display: block; height: 100%; background: var(--pot); border-radius: var(--md-sys-shape-corner-full); transition: width var(--md-sys-motion-duration-long2) var(--md-sys-motion-easing-emphasized); }
     .actions { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
     .act { --container: var(--md-sys-color-surface-container); background: var(--md-sys-color-surface-container); border-radius: var(--md-sys-shape-corner-medium); padding: var(--space-4); min-width: 0; }
+    .act-move { padding: var(--space-5); }
+    .act-move .btn-row { margin-top: var(--space-4); }
     .act-em .em-withdraw { margin-block: var(--space-4) var(--space-2); }
     .emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: var(--space-2); }
     .emoji-grid button { min-height: 48px; font: var(--md-sys-typescale-title-large); letter-spacing: var(--md-sys-typescale-title-large-tracking); border: 1px solid var(--md-sys-color-outline); background: transparent; border-radius: var(--md-sys-shape-corner-medium); cursor: pointer; color: var(--md-sys-color-on-surface); }
@@ -1077,8 +1080,8 @@
     }
     function moveControl(p) {
       var b = function (mode, label, cls) { return '<button type="button" class="btn ' + cls + '" id="' + mode + '-' + p.id + '" data-action="move" data-mode="' + mode + '" data-id="' + p.id + '">' + label + '</button>'; };
-      if (p.main) return '<div class="act"><h4>Move money</h4><p class="hint">Move money from Savings into any pot.</p><div class="btn-row">' + b('mv', 'Move money', 'tonal') + '</div></div>';
-      return '<div class="act"><h4>Move money</h4><p class="hint">Move money between this pot and Savings or your other pots.' + (p.emergency ? ' Sending money out of the Emergency Fund follows the emergency rules.' : '') + '</p><div class="btn-row">' + b('fromsav', 'Add from Savings', 'tonal') + b('tosav', 'Send to Savings', 'tonal') + b('mv', 'Move money', 'outlined') + '</div></div>';
+      if (p.main) return '<div class="act act-move"><h4>Move money</h4><p class="hint">Move money from Savings into any pot.</p><div class="btn-row">' + b('mv', 'Move money', 'tonal') + '</div></div>';
+      return '<div class="act act-move"><h4>Move money</h4><p class="hint">Move money between this pot and Savings or your other pots.' + (p.emergency ? ' Sending money out of the Emergency Fund follows the emergency rules.' : '') + '</p><div class="btn-row">' + b('fromsav', 'Add from Savings', 'tonal') + b('tosav', 'Send to Savings', 'tonal') + b('mv', 'Move money', 'outlined') + '</div></div>';
     }
     function renderPots() {
       var tot = total();
