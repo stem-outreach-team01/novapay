@@ -796,7 +796,26 @@
     .s-about a { color: var(--md-sys-color-on-surface); text-decoration: underline; text-underline-offset: 0.2em; overflow-wrap: anywhere; }
     .s-about ul { margin: 0; padding-left: var(--space-6); display: grid; gap: var(--space-2); }
     .read-aloud[hidden] { display: none; }
-    .read-aloud { display: grid; gap: var(--space-3); }
+    .read-aloud { position: sticky; top: var(--space-2); z-index: 900; display: grid; gap: var(--space-3); min-width: 0; margin: 0 0 var(--space-4); padding: var(--space-3); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); box-shadow: var(--md-sys-elevation-2); }
+    .ra-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+    .ra-controls .btn { min-height: 3rem; }
+    #ra-toggle::before { content: '▶'; margin-right: var(--space-2); }
+    #ra-toggle[aria-pressed="true"]::before { content: 'Ⅱ'; }
+    .ra-progress-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+    .ra-progress { appearance: none; -webkit-appearance: none; width: 100%; min-width: 0; min-height: 3rem; margin: 0; accent-color: var(--md-sys-color-primary); cursor: pointer; background: transparent; }
+    .ra-progress::-webkit-slider-runnable-track { height: 0.4rem; border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-full); background: linear-gradient(to right, var(--md-sys-color-primary) 0 var(--ra-progress, 0%), var(--md-sys-color-surface-container-highest) var(--ra-progress, 0%) 100%); }
+    .ra-progress::-moz-range-track { height: 0.4rem; border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-full); background: var(--md-sys-color-surface-container-highest); }
+    .ra-progress::-moz-range-progress { height: 0.4rem; border-radius: var(--md-sys-shape-corner-full); background: var(--md-sys-color-primary); }
+    .ra-progress::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 1.25rem; height: 1.25rem; margin-top: -0.45rem; border: 2px solid var(--md-sys-color-on-primary); border-radius: 50%; background: var(--md-sys-color-primary); box-shadow: 0 0 0 1px var(--md-sys-color-outline); }
+    .ra-progress::-moz-range-thumb { width: 1rem; height: 1rem; border: 2px solid var(--md-sys-color-on-primary); border-radius: 50%; background: var(--md-sys-color-primary); box-shadow: 0 0 0 1px var(--md-sys-color-outline); }
+    .ra-progress:focus-visible, .ra-controls .btn:focus-visible { outline: var(--md-sys-focus-width) solid var(--md-sys-color-on-surface); outline-offset: 2px; }
+    .ra-progress-label, .ra-status { margin: 0; font: var(--md-sys-typescale-body-small); color: var(--md-sys-color-on-surface); }
+    .ra-status { min-height: 1.25em; }
+    .reading-current { outline: 3px solid var(--md-sys-color-on-surface); outline-offset: 4px; border-radius: var(--md-sys-shape-corner-small); }
+    @media (max-width: 360px) {
+      .ra-progress-wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+      .ra-controls .btn { flex: 1 1 auto; }
+    }
 
     .sr-quick { width: 100%; display: flex; align-items: center; gap: var(--space-4); margin: 0 0 var(--space-4); padding: var(--space-4); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font: inherit; text-align: left; cursor: pointer; }
     .sr-quick:hover { background: color-mix(in srgb, var(--md-sys-color-primary-container) 90%, var(--md-sys-color-on-primary-container)); }
@@ -910,6 +929,22 @@
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zm-2.5-9.77v2.06a8 8 0 0 1 0 15.42v2.06a10 10 0 0 0 0-19.54z"/></svg>
       <span class="sr-quick-copy"><span class="sr-quick-title">Screen reader</span><span class="sr-quick-hint" id="srQuickHint">Turn on screen reader support and read-aloud tools.</span></span>
     </button>
+    <div class="read-aloud" id="readAloud" hidden>
+      <p class="hint" id="readAloudHint">Read aloud uses your browser's built-in voice. It is separate from a screen reader.</p>
+      <div id="readAloudUnavailable" hidden><p class="ra-status">Read aloud is not supported by this browser. Screen reader mode is still available.</p></div>
+      <div id="readAloudPlayer">
+        <div class="ra-controls" role="group" aria-label="Read-aloud playback controls">
+          <button type="button" class="btn tonal" id="ra-toggle" aria-label="Play reading" aria-pressed="false" aria-describedby="readAloudHint">Play reading</button>
+          <button type="button" class="btn outlined" id="ra-stop">Stop</button>
+          <button type="button" class="btn outlined" id="ra-restart">Restart</button>
+        </div>
+        <div class="ra-progress-wrap">
+          <input type="range" class="ra-progress" id="ra-progress" min="0" max="0" step="1" value="0" aria-label="Reading progress" aria-valuetext="Section 0 of 0" />
+          <span class="ra-progress-label" id="ra-progress-label">Section 0 of 0</span>
+        </div>
+        <p class="ra-status" id="ra-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </div>
     <section class="hero" aria-labelledby="title">
       <div class="hero-art" aria-hidden="true"><svg viewBox="0 0 400 104" preserveAspectRatio="xMaxYMid meet" focusable="false"><path class="blob-b" d="M236 60c-6-26 14-50 44-52 26-2 40 14 38 36-2 26-24 52-52 52-20 0-26-16-30-36z"/><path class="blob-a" d="M262 30c18-20 52-22 78-8 26 14 40 44 26 66-14 20-48 24-74 14-30-12-48-52-30-72z"/><circle class="blob-c" cx="376" cy="22" r="14"/></svg></div>
       <div class="eyebrow">NovaPay feature starter</div>
@@ -1271,15 +1306,7 @@
       <section class="s-group" aria-labelledby="sSrH">
         <h3 id="sSrH">Screen reader mode</h3>
         <label class="switch"><input type="checkbox" role="switch" id="set-sr" aria-describedby="set-sr-h" /><span class="switch-track" aria-hidden="true"></span><span class="switch-text"><strong>Screen reader mode</strong><span class="hint" id="set-sr-h">Replaces the charts with data tables, adds fuller labels and announces every action. It works alongside NVDA, JAWS, VoiceOver and TalkBack.</span></span><span class="switch-state" aria-hidden="true"></span></label>
-        <div class="read-aloud" id="readAloud" hidden>
-          <p class="hint" id="readAloudHint">Read aloud uses your browser's built-in voice. It is separate from a screen reader.</p>
-          <div class="btn-row">
-            <button type="button" class="btn tonal" id="ra-play" aria-describedby="readAloudHint">Read this page summary</button>
-            <button type="button" class="btn outlined" id="ra-pause" disabled>Pause</button>
-            <button type="button" class="btn outlined" id="ra-stop" disabled>Stop</button>
-          </div>
-          <div class="s-range"><label for="ra-rate" id="ra-rate-l">Speech rate: 1×</label><input type="range" id="ra-rate" min="0.5" max="2" step="0.25" value="1" /></div>
-        </div>
+        <div class="s-range"><label for="ra-rate" id="ra-rate-l">Speech rate: 1×</label><input type="range" id="ra-rate" min="0.5" max="2" step="0.25" value="1" /></div>
       </section>
 
       <section class="s-group s-about" aria-labelledby="sAboutH">
@@ -1668,14 +1695,22 @@
         if (on) $(x[0]).setAttribute('aria-label', x[1]); else $(x[0]).removeAttribute('aria-label');
       });
     }
-    function summaryText() {
-      var tot = total(), parts = ['NovaPay summary.', 'Spending balance ' + fmt(state.balance) + '.', 'Total savings ' + fmt(tot) + ' across ' + state.pots.length + ' pots.'];
-      state.pots.forEach(function (p) { parts.push(p.name + ', ' + fmt(p.balance) + ', ' + (tot ? Math.round(p.balance / tot * 100) : 0) + ' percent of your savings' + (p.goal ? ', ' + pctOf(p) + ' percent of its ' + fmt(p.goal.target) + ' goal' : '') + '.'); });
-      parts.push(activeSubs().length ? 'Monthly subscriptions cost ' + fmt(monthly()) + ' across ' + activeSubs().length + ' services.' : 'You have no active subscriptions.');
-      if (saved()) parts.push('Cancelled subscriptions are saving you ' + fmt(saved()) + ' a month.');
-      return parts.join(' ');
+    function summarySections() {
+      var tot = total(), sections = [
+        { text: 'NovaPay summary.', target: document.getElementById('title') },
+        { text: 'Spending balance ' + fmt(state.balance) + '.', target: document.getElementById('mainBal') },
+        { text: 'Total savings ' + fmt(tot) + ' across ' + state.pots.length + ' pots.', target: document.getElementById('faceFront') }
+      ];
+      state.pots.forEach(function (p) {
+        var target = Array.prototype.find.call(document.querySelectorAll('.pot[data-id]'), function (node) { return node.getAttribute('data-id') === String(p.id); });
+        sections.push({ text: p.name + ', ' + fmt(p.balance) + ', ' + (tot ? Math.round(p.balance / tot * 100) : 0) + ' percent of your savings' + (p.goal ? ', ' + pctOf(p) + ' percent of its ' + fmt(p.goal.target) + ' goal' : '') + '.', target: target || document.getElementById('potsTitle') });
+      });
+      sections.push({ text: activeSubs().length ? 'Monthly subscriptions cost ' + fmt(monthly()) + ' across ' + activeSubs().length + ' services.' : 'You have no active subscriptions.', target: document.getElementById('faceBack') });
+      if (saved()) sections.push({ text: 'Cancelled subscriptions are saving you ' + fmt(saved()) + ' a month.', target: document.getElementById('subSaving') });
+      return sections;
     }
-    window.NovaApp = { announce: announce, summary: summaryText };
+    function summaryText() { return summarySections().map(function (section) { return section.text; }).join(' '); }
+    window.NovaApp = { announce: announce, summary: summaryText, readingSections: summarySections };
     var chartLayout = root.dataset.theme;
     document.addEventListener('novapay:settings', function () {
       if (root.dataset.theme !== chartLayout) {
@@ -2353,28 +2388,156 @@
         if (announceMsg) announce(announceMsg);
       }
 
-      /* ---------- read aloud (Web Speech API, hidden when unsupported or screen reader mode is off) ---------- */
-      var speech = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-      var ra = el('readAloud'), play = el('ra-play'), pause = el('ra-pause'), stop = el('ra-stop');
+      /* ---------- read aloud (Web Speech API with seekable summary sections) ---------- */
+      var speech = !!('speechSynthesis' in window && window.speechSynthesis && typeof window.speechSynthesis.speak === 'function' && 'SpeechSynthesisUtterance' in window);
+      var ra = el('readAloud'), player = el('readAloudPlayer'), unavailable = el('readAloudUnavailable');
+      var toggle = el('ra-toggle'), stop = el('ra-stop'), restart = el('ra-restart');
+      var progress = el('ra-progress'), progressLabel = el('ra-progress-label'), status = el('ra-status');
+      var sections = [], sectionIndex = 0, sectionOffset = 0;
+      var playing = false, paused = false, fallbackPaused = false, finished = false;
+      var runId = 0, currentUtterance = null, currentTarget = null;
+
+      function setToggle() {
+        toggle.textContent = playing ? 'Pause reading' : 'Play reading';
+        toggle.setAttribute('aria-label', playing ? 'Pause reading' : 'Play reading');
+        toggle.setAttribute('aria-pressed', String(playing));
+      }
+      function drawProgress(index, fraction) {
+        var count = sections.length, maximum = Math.max(0, count - 1);
+        index = Math.max(0, Math.min(maximum, index));
+        progress.max = String(maximum);
+        progress.value = String(index);
+        var label = count ? 'Section ' + (index + 1) + ' of ' + count : 'Section 0 of 0';
+        progress.setAttribute('aria-valuetext', label);
+        progressLabel.textContent = label;
+        var fill = count > 1 ? ((index + (fraction || 0)) / maximum) * 100 : (fraction || 0) * 100;
+        progress.style.setProperty('--ra-progress', Math.min(100, fill) + '%');
+      }
+      function progressAt(index, fraction) {
+        sectionIndex = Math.max(0, Math.min(Math.max(0, sections.length - 1), index));
+        drawProgress(sectionIndex, fraction);
+      }
+      function highlight(index, scroll) {
+        if (currentTarget) currentTarget.classList.remove('reading-current');
+        currentTarget = sections[index] && sections[index].target;
+        if (!currentTarget) return;
+        if (currentTarget.id === 'faceBack' && currentTarget.hasAttribute('inert')) el('flipToSubs').click();
+        if (currentTarget.id === 'faceFront' && el('faceFront').hasAttribute('inert')) el('flipToSave').click();
+        currentTarget.classList.add('reading-current');
+        if (scroll) currentTarget.scrollIntoView({ behavior: root.dataset.motion === 'reduce' ? 'auto' : 'smooth', block: 'center' });
+      }
+      function loadSections() {
+        sections = window.NovaApp && window.NovaApp.readingSections
+          ? window.NovaApp.readingSections()
+          : [{ text: document.title, target: document.getElementById('title') }];
+        progressAt(0, 0);
+      }
+      function cancelSpeech() {
+        runId += 1;
+        if (speech) window.speechSynthesis.cancel();
+        currentUtterance = null;
+      }
+      function speakSection(offset) {
+        var item = sections[sectionIndex];
+        if (!item) return;
+        var thisRun = ++runId, utterance = new SpeechSynthesisUtterance(item.text.slice(offset));
+        currentUtterance = utterance;
+        utterance.lang = 'en-GB';
+        utterance.rate = s.rate;
+        utterance.onstart = function () {
+          if (thisRun !== runId) return;
+          playing = true; paused = false; setToggle();
+          status.textContent = 'Playing section ' + (sectionIndex + 1) + ' of ' + sections.length;
+        };
+        utterance.onboundary = function (event) {
+          if (thisRun !== runId) return;
+          if (typeof event.charIndex === 'number') {
+            sectionOffset = offset + event.charIndex;
+            progressAt(sectionIndex, Math.min(0.99, sectionOffset / Math.max(item.text.length, 1)));
+          }
+        };
+        utterance.onend = function () {
+          if (thisRun !== runId) return;
+          currentUtterance = null;
+          if (sectionIndex + 1 < sections.length) {
+            sectionIndex += 1; sectionOffset = 0; progressAt(sectionIndex, 0); highlight(sectionIndex, true); speakSection(0);
+          } else {
+            finished = true; playing = false; paused = false; sectionOffset = item.text.length;
+            progressAt(sectionIndex, 1); setToggle(); status.textContent = 'Reading finished. Choose Restart to hear it again.';
+          }
+        };
+        utterance.onerror = function (event) {
+          if (thisRun !== runId || event.error === 'canceled' || event.error === 'interrupted') return;
+          currentUtterance = null; playing = false; paused = false; setToggle();
+          status.textContent = 'Read aloud stopped because the browser could not play speech.';
+        };
+        window.speechSynthesis.speak(utterance);
+      }
+      function beginReading(index, offset, refresh) {
+        if (!speech || !s.sr) return;
+        cancelSpeech();
+        if (refresh !== false || !sections.length) loadSections();
+        sectionIndex = Math.max(0, Math.min(sections.length - 1, index));
+        sectionOffset = Math.max(0, offset || 0); finished = false; fallbackPaused = false; paused = false; playing = true;
+        progressAt(sectionIndex, sectionOffset / Math.max(sections[sectionIndex].text.length, 1));
+        highlight(sectionIndex, true); setToggle(); speakSection(sectionOffset);
+      }
+      function pauseReading() {
+        if (!playing) return;
+        playing = false; paused = true; setToggle(); status.textContent = 'Paused';
+        var expectedRun = runId;
+        try { window.speechSynthesis.pause(); } catch (error) {
+          fallbackPaused = true; runId += 1; window.speechSynthesis.cancel(); currentUtterance = null; return;
+        }
+        window.setTimeout(function () {
+          if (!paused || expectedRun !== runId || window.speechSynthesis.paused) return;
+          fallbackPaused = true; runId += 1; window.speechSynthesis.cancel(); currentUtterance = null;
+        }, 250);
+      }
+      function resumeReading() {
+        if (!paused) return;
+        if (fallbackPaused || !currentUtterance) {
+          fallbackPaused = false; playing = true; paused = false; setToggle(); speakSection(sectionOffset); return;
+        }
+        try { window.speechSynthesis.resume(); } catch (error) {
+          cancelSpeech(); fallbackPaused = false; playing = true; paused = false; setToggle(); speakSection(sectionOffset); return;
+        }
+        playing = true; paused = false; setToggle();
+        status.textContent = 'Playing section ' + (sectionIndex + 1) + ' of ' + sections.length;
+      }
+      function toggleReading() {
+        if (playing) pauseReading();
+        else if (paused) resumeReading();
+        else beginReading(finished ? 0 : sectionIndex, finished ? 0 : sectionOffset, true);
+      }
+      function stopReading(announceStatus) {
+        cancelSpeech(); playing = false; paused = false; fallbackPaused = false; finished = false; sectionOffset = 0;
+        if (currentTarget) currentTarget.classList.remove('reading-current');
+        currentTarget = null; progressAt(0, 0); setToggle();
+        if (announceStatus) status.textContent = 'Stopped';
+      }
       function readAloudState() {
-        ra.hidden = !(speech && s.sr);
-        if (!s.sr && speech) { speechSynthesis.cancel(); raButtons(false); }
+        ra.hidden = !s.sr;
+        player.hidden = !speech;
+        unavailable.hidden = speech;
+        if (speech && !s.sr) stopReading(false);
+        if (speech && s.sr && !sections.length) loadSections();
       }
-      function raButtons(speaking) { pause.disabled = !speaking; stop.disabled = !speaking; pause.textContent = 'Pause'; }
-      if (speech) {
-        play.addEventListener('click', function () {
-          speechSynthesis.cancel();
-          var u = new SpeechSynthesisUtterance(window.NovaApp ? window.NovaApp.summary() : document.title);
-          u.lang = 'en-GB'; u.rate = s.rate;
-          u.onend = u.onerror = function () { raButtons(false); };
-          raButtons(true); speechSynthesis.speak(u);
-        });
-        pause.addEventListener('click', function () {
-          if (speechSynthesis.paused) { speechSynthesis.resume(); pause.textContent = 'Pause'; } else { speechSynthesis.pause(); pause.textContent = 'Resume'; }
-        });
-        stop.addEventListener('click', function () { speechSynthesis.cancel(); raButtons(false); });
-        window.addEventListener('pagehide', function () { speechSynthesis.cancel(); });
-      }
+      toggle.addEventListener('click', toggleReading);
+      stop.addEventListener('click', function () { stopReading(true); });
+      restart.addEventListener('click', function () { beginReading(0, 0, true); });
+      progress.addEventListener('input', function () {
+        drawProgress(parseInt(progress.value, 10) || 0, 0);
+      });
+      progress.addEventListener('change', function () {
+        beginReading(parseInt(progress.value, 10) || 0, 0, !playing && !paused);
+      });
+      ra.addEventListener('keydown', function (event) {
+        if ((event.code === 'Space' || event.key.toLowerCase() === 'k') && !event.altKey && !event.ctrlKey && !event.metaKey) {
+          event.preventDefault(); toggleReading();
+        }
+      });
+      if (speech) window.addEventListener('pagehide', function () { cancelSpeech(); });
 
       /* ---------- open / close (focus trap, Escape, scrim, focus return) ---------- */
       var INERT = ['.skip-link', '.site-header', '#main', '.site-footer', '#coachBtn', '#coachBackdrop', '#coachPanel'];
