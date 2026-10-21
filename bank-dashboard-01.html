@@ -36,13 +36,13 @@
       --hero-from:    #0F1340;
       --hero-mid:     #1A1560;
       --hero-to:      #2D1B69;
-      --accent:       #6C63FF;
+      --accent:       #5146D8;
       --accent-light: #EEEEFF;
       --text:         #0D0F1C;
-      --muted:        #A9AFC0;
+      --muted:        #555D70;
       --border:       #E8ECF2;
-      --debit:        #FF4757;
-      --credit:       #00C896;
+      --debit:        #B42332;
+      --credit:       #087443;
       --shadow:       0 2px 12px rgba(13,15,28,0.08);
       --r:            16px;
       --r-sm:         10px;
@@ -71,7 +71,7 @@
     }
 
     .app-logo {
-      font-size: 1.2em;
+      font-size: 1.25em;
       font-weight: 800;
       letter-spacing: -0.04em;
       color: var(--accent);
@@ -86,7 +86,7 @@
       border: none; border-radius: 50%;
       background: var(--bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.8em;
+      font-size: 0.9em;
       cursor: pointer;
     }
 
@@ -95,7 +95,7 @@
       border-radius: 50%;
       background: var(--accent);
       color: white;
-      font-size: 0.75em;
+      font-size: 0.8em;
       font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       letter-spacing: 0;
@@ -108,7 +108,7 @@
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 20px;
     }
 
     /* ── BALANCE HERO ───────────────────────── */
@@ -139,11 +139,11 @@
     }
 
     .balance-eyebrow {
-      font-size: 0.7em;
+      font-size: 0.8em;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.85);
       margin-bottom: 10px;
       position: relative; z-index: 1;
     }
@@ -153,7 +153,7 @@
       font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1;
-      color: #0F1340;
+      color: #FFFFFF;
       margin-bottom: 24px;
       font-variant-numeric: tabular-nums;
       position: relative; z-index: 1;
@@ -167,9 +167,9 @@
     }
 
     .account-name {
-      font-size: 0.85em;
+      font-size: 0.95em;
       font-weight: 500;
-      color: rgba(255,255,255,0.65);
+      color: rgba(255,255,255,0.9);
     }
 
     .account-pill {
@@ -177,7 +177,7 @@
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 100px;
       padding: 5px 14px;
-      font-size: 0.78em;
+      font-size: 0.82em;
       font-weight: 600;
       letter-spacing: 0.06em;
       color: rgba(255,255,255,0.85);
@@ -187,18 +187,18 @@
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
 
     .stat-card {
       background: var(--card);
       border-radius: var(--r-sm);
-      padding: 16px 18px;
+      padding: 18px 20px;
       box-shadow: var(--shadow);
     }
 
     .stat-label {
-      font-size: 0.7em;
+      font-size: 0.82em;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -207,7 +207,7 @@
     }
 
     .stat-value {
-      font-size: 1.2em;
+      font-size: 1.35em;
       font-weight: 700;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
@@ -219,17 +219,17 @@
     .card {
       background: var(--card);
       border-radius: var(--r);
-      padding: 22px;
+      padding: 24px;
       box-shadow: var(--shadow);
     }
 
     .card-title {
-      font-size: 0.72em;
+      font-size: 1em;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
+      color: var(--text);
+      margin-bottom: 18px;
     }
 
     /* ── TRANSACTIONS ───────────────────────── */
@@ -254,7 +254,7 @@
     .tx-meta { flex: 1; min-width: 0; }
 
     .tx-name {
-      font-size: 0.92em;
+      font-size: 1em;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
@@ -263,13 +263,13 @@
 
     /* MAKEOVER? Is this date easy to read? */
     .tx-date {
-      font-size: 0.65em;
+      font-size: 0.8em;
       color: var(--muted);
       margin-top: 3px;
     }
 
     .tx-amount {
-      font-size: 0.92em;
+      font-size: 1em;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       flex-shrink: 0;
@@ -278,11 +278,11 @@
     .tx-amount.credit { color: var(--credit); }
 
     /* ── FORMS ──────────────────────────────── */
-    .field { margin-bottom: 14px; }
+    .field { margin-bottom: 16px; }
 
     .field-label {
       display: block;
-      font-size: 0.72em;
+      font-size: 0.85em;
       font-weight: 700;
       letter-spacing: 0.07em;
       text-transform: uppercase;
@@ -298,7 +298,7 @@
       transform: translateY(-50%);
       font-weight: 600;
       color: var(--muted);
-      font-size: 0.9em;
+      font-size: 0.95em;
       pointer-events: none;
     }
 
@@ -308,7 +308,7 @@
       padding: 12px 14px 12px 30px;
       border: 2px solid var(--border);
       border-radius: var(--r-sm);
-      font-size: 0.95em;
+      font-size: 1em;
       font-family: inherit;
       color: var(--text);
       background: var(--bg);
@@ -321,7 +321,7 @@
       padding: 13px;
       border: none;
       border-radius: var(--r-sm);
-      font-size: 0.95em;
+      font-size: 1em;
       font-family: inherit;
       font-weight: 700;
       letter-spacing: 0.02em;
@@ -340,7 +340,7 @@
       margin-top: 12px;
       padding: 12px 16px;
       border-radius: var(--r-sm);
-      font-size: 0.88em;
+      font-size: 0.95em;
       font-weight: 500;
       display: none;
     }
@@ -356,7 +356,7 @@
       display: none;
     }
     .result-eyebrow {
-      font-size: 0.68em;
+      font-size: 0.8em;
       font-weight: 700;
       letter-spacing: 0.09em;
       text-transform: uppercase;
@@ -364,7 +364,7 @@
       margin-bottom: 5px;
     }
     .result-figure {
-      font-size: 1.8em;
+      font-size: 2em;
       font-weight: 800;
       color: var(--accent);
       letter-spacing: -0.03em;
@@ -373,7 +373,7 @@
 
     /* ── CALC GRID ─────��────────────────────── */
     /* MAKEOVER? Squash your browser window to phone width. What happens here? */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   </style>
 </head>
 <body>
@@ -481,7 +481,7 @@
 
     <div class="card">
       <div class="card-title">Interest Calculator</div>
-      <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;">
+      <p style="font-size:0.95em;color:var(--muted);margin-bottom:16px;">
         Find out how much your savings could earn over 12 months.
       </p>
 
