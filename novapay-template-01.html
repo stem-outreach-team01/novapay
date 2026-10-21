@@ -15,10 +15,10 @@
     (function () {
       'use strict';
       var KEY = 'novapay-settings-v1';
-      var DEFAULTS = { theme: 'vibe', bg: 'default', customBg: '#ffffff', customText: '', text: 100, font: 'default', lh: 'default', ls: 'default', ws: 'default', ps: 'default', contrast: false, motion: false, focus: false, links: false, cb: false, targets: false, reading: false, sr: false, rate: 1 };
+      var DEFAULTS = { theme: 'vibe', palette: 'fun', bg: 'default', customBg: '#ffffff', customText: '', text: 100, font: 'default', lh: 'default', ls: 'default', ws: 'default', ps: 'default', contrast: false, motion: false, focus: false, links: false, cb: false, targets: false, reading: false, sr: false, rate: 1 };
       var PRESETS = { cream: '#fff8e7', blue: '#e6f1fb', green: '#e7f5e8', yellow: '#fff9c4', grey: '#eeeeee', dark: '#121212', hcdark: '#000000', hclight: '#ffffff' };
       var BASE_BG = { vibe: '#6050e8', classic: '#fcf8fd' }; /* keep in sync with --md-sys-color-surface in each theme block */
-      var CHOICES = { theme: ['vibe', 'classic'], text: [100, 125, 150, 200], font: ['default', 'dyslexia', 'opendyslexic', 'atkinson', 'sans', 'serif'], lh: ['default', '1.5', '1.75', '2'], ls: ['default', 'wide'], ws: ['default', 'wide'], ps: ['default', 'wide'] };
+      var CHOICES = { theme: ['vibe', 'classic'], palette: ['fun', 'light', 'dark', 'custom'], text: [100, 125, 150, 200], font: ['default', 'dyslexia', 'opendyslexic', 'atkinson', 'sans', 'serif'], lh: ['default', '1.5', '1.75', '2'], ls: ['default', 'wide'], ws: ['default', 'wide'], ps: ['default', 'wide'] };
       var HEX = /^#[0-9a-f]{6}$/i;
 
       function rgb(h) { return [1, 3, 5].map(function (i) { return parseInt(h.slice(i, i + 2), 16); }); }
@@ -32,7 +32,7 @@
       function firstThat(list, ok, fallback) { for (var i = 0; i < list.length; i++) if (ok(list[i])) return list[i]; return fallback; }
 
       /* Builds the Material colour roles for any background. Every text/background pairing it returns is >= 4.5:1 and borders are >= 3:1. */
-      function tokens(theme, bg, high, text) {
+      function tokens(theme, bg, high, text, palette) {
         var dark = ratio(bg, '#ffffff') > ratio(bg, '#000000');
         if (high) bg = dark ? '#000000' : '#ffffff';
         var ink = high ? (dark ? '#ffffff' : '#000000') : onColour(bg);
@@ -48,7 +48,7 @@
         var outline = firstThat([0.5, 0.6, 0.7, 0.85, 1], function (t) { var c = mix(bg, ink, t); return ratio(c, top) >= 3 && ratio(c, bg) >= 3; }, 1);
         outline = mix(bg, ink, outline);
         var accents = high ? (dark ? ['#ffff00'] : ['#0000cc', '#000099'])
-          : theme === 'vibe' ? (dark ? ['#eef77a', '#c4c0ff', '#ffffff'] : ['#4b3bd0', '#3f2fb5', '#2b1f8f'])
+          : palette === 'fun' ? (dark ? ['#eef77a', '#c4c0ff', '#ffffff'] : ['#4b3bd0', '#3f2fb5', '#2b1f8f'])
           : (dark ? ['#c4c0ff', '#e3dfff'] : ['#5854a8', '#403a8a', '#2b2670']);
         var primary = firstThat(accents, okOnAll, ink);
         var errs = high ? (dark ? ['#ffb4ab'] : ['#9b0000', '#7a0000']) : (dark ? ['#ffb4ab', '#ffd9d5', '#ffffff'] : ['#b3261e', '#8c1d18', '#601410']);
@@ -74,6 +74,7 @@
         var s = {}, k;
         o = o && typeof o === 'object' ? o : {};
         for (k in DEFAULTS) s[k] = typeof o[k] === typeof DEFAULTS[k] ? o[k] : DEFAULTS[k];
+        if (typeof o.palette !== 'string') s.palette = s.theme === 'classic' ? 'light' : 'fun';
         for (k in CHOICES) if (CHOICES[k].indexOf(s[k]) === -1) s[k] = DEFAULTS[k];
         if (s.bg !== 'default' && s.bg !== 'custom' && !PRESETS[s.bg]) s.bg = 'default';
         if (!HEX.test(s.customBg)) s.customBg = DEFAULTS.customBg;
@@ -94,14 +95,16 @@
         function flag(k, v) { if (v) d[k] = v; else delete d[k]; }
         var high = !!s.contrast || s.bg === 'hcdark' || s.bg === 'hclight';
         var osReduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        d.theme = s.theme; d.bg = s.bg; d.text = String(s.text); d.font = s.font;
+        d.theme = s.theme; d.palette = s.palette; d.bg = s.bg; d.text = String(s.text); d.font = s.font;
         flag('lh', s.lh !== 'default' && s.lh); flag('ls', s.ls !== 'default' && s.ls); flag('ws', s.ws !== 'default' && s.ws); flag('ps', s.ps !== 'default' && s.ps);
         flag('contrast', high && 'high'); flag('motion', (s.motion || osReduce) && 'reduce'); flag('focus', s.focus && 'enhanced'); flag('links', s.links && 'underline');
         flag('cb', s.cb && 'on'); flag('targets', s.targets && 'large'); flag('reading', s.reading && 'narrow'); flag('sr', s.sr && 'on');
         var res = null;
-        if (s.bg !== 'default' || high) {
-          var bg = s.bg === 'custom' ? s.customBg : (PRESETS[s.bg] || BASE_BG[s.theme]);
-          res = tokens(s.theme, bg, high, s.bg === 'custom' ? s.customText : '');
+        if (s.palette !== 'fun' || s.bg !== 'default' || high) {
+          var bg = s.palette === 'custom'
+            ? (s.bg === 'custom' ? s.customBg : (PRESETS[s.bg] || BASE_BG[s.theme]))
+            : (s.bg !== 'default' ? (s.bg === 'custom' ? s.customBg : PRESETS[s.bg]) : (s.palette === 'dark' ? PRESETS.dark : s.palette === 'light' ? BASE_BG.classic : BASE_BG.vibe));
+          res = tokens(s.theme, bg, high, s.bg === 'custom' ? s.customText : '', s.palette);
         }
         applied.forEach(function (k) { r.style.removeProperty(k); }); applied = [];
         if (res) Object.keys(res.tokens).forEach(function (k) { r.style.setProperty(k, res.tokens[k]); applied.push(k); });
@@ -408,6 +411,17 @@
 
     /* Pie / donut chart: solid fills, consistent gaps, inverse-surface tooltip */
     .chart-box { position: relative; width: min(100%, 21.25rem); aspect-ratio: 1; margin: var(--space-2) auto; }
+    .chart-view-controls { display: none; justify-content: center; margin: var(--space-3) 0; }
+    html[data-theme="classic"] .chart-view-controls { display: flex; }
+    html[data-sr="on"] .chart-view-controls { display: none; }
+    .chart-box.bar-hidden { display: none; }
+    .savings-bars { display: none; list-style: none; padding: 0; margin: var(--space-4) 0; gap: var(--space-2); }
+    .savings-bars.active { display: grid; }
+    .savings-bar { width: 100%; border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-sys-shape-corner-medium); background: var(--md-sys-color-surface-container-low); color: var(--md-sys-color-on-surface); padding: var(--space-3); text-align: left; cursor: pointer; font: var(--md-sys-typescale-body-medium); }
+    .savings-bar:hover { background: var(--md-sys-color-surface-container); }
+    .savings-bar-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-3); margin-bottom: var(--space-2); }
+    .savings-bar-track { display: block; height: 1rem; border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-full); background: var(--md-sys-color-surface-container-highest); overflow: hidden; }
+    .savings-bar-fill { display: block; height: 100%; min-width: 0; border-radius: inherit; }
     .donut { width: 100%; height: 100%; display: block; overflow: visible; }
     .empty { stroke: var(--md-sys-color-surface-container-highest); }
     .seg { cursor: pointer; outline: none; }
@@ -600,9 +614,12 @@
     .hero-art { display: none; }
     .err:not(:empty)::before { content: '\26A0\FE0E  ' / ''; }
     .coach-panel h3 { font: var(--md-sys-typescale-title-large); letter-spacing: var(--md-sys-typescale-title-large-tracking); font-weight: var(--md-sys-typescale-heading-weight); color: var(--md-sys-color-heading); }
-    .display-num, h1, .centre .big, .ic-stat-value, .stat .value, .pot-bal { font-family: var(--md-ref-typeface-display); font-style: var(--md-ref-display-style); }
+    .display-num, h1, .centre .big, .ic-stat-value, .stat .value { font-family: var(--md-ref-typeface-display); font-style: var(--md-ref-display-style); }
+    .shell :is(h2, h3, h4), .coach-panel h3, .settings-sheet h3, dialog h3 { font-family: var(--md-ref-typeface-display); font-style: var(--md-ref-display-style); }
+    .shell .pot-name { font-family: var(--md-ref-typeface-display); font-style: var(--md-ref-display-style); }
+    .shell .pot-bal { font-family: var(--md-ref-typeface-plain); font-style: normal; }
 
-    /* ===== Theme: Vibe (default). Layers over the Material 3 tokens above; Classic / Easy read simply does not apply this block.
+    /* ===== Standard layout. Layers over the Material 3 tokens above; the accessible layout does not apply this block.
        Periwinkle surfaces, lime accent. Contrast (WCAG 2.2 AA): white on #6050e8 5.5:1, lime #eef77a on #6050e8 4.8:1, ink #1b1445 on lime 14.8:1,
        ink on #e4dfff 13.2:1, lime on #2a1f86 11.1:1, error #ffd9d5 on the card surfaces 5.0:1 and up. ===== */
     html[data-theme="vibe"] {
@@ -711,7 +728,7 @@
       html[data-theme="vibe"] .icon-btn:hover { transform: rotate(45deg); }
     }
 
-    /* ===== Theme: Classic / Easy read. Uses the original Material light tokens in :root (no Vibe block): original fonts,
+    /* ===== Accessible layout. Uses the original Material light tokens in :root: original fonts,
        plain light surfaces, no decorative shapes, no display italics, a single column and rectangular-rounded buttons. ===== */
     html[data-theme="classic"] .shell { max-width: 48rem; }
     html[data-theme="classic"] .hero-grid, html[data-theme="classic"] .actions, html[data-theme="classic"] .ic-form { grid-template-columns: minmax(0, 1fr); }
@@ -742,7 +759,9 @@
     .settings-head { flex: none; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-4) var(--space-4) var(--space-3) var(--space-6); border-bottom: 1px solid var(--md-sys-color-outline-variant); }
     .settings-head h2, .settings-sheet h3 { font-weight: var(--md-sys-typescale-heading-weight); color: var(--md-sys-color-heading); margin: 0; }
     .settings-head h2 { font: var(--md-sys-typescale-headline-small); font-weight: var(--md-sys-typescale-heading-weight); }
-    .settings-sheet h3 { font: var(--md-sys-typescale-title-medium); font-weight: var(--md-sys-typescale-heading-weight); }
+    .settings-sheet h3 { font: var(--md-sys-typescale-title-medium); font-family: var(--md-ref-typeface-display); font-style: var(--md-ref-display-style); font-weight: var(--md-sys-typescale-heading-weight); }
+    .palette-options { display: none; }
+    html[data-theme="vibe"] .palette-standard, html[data-theme="classic"] .palette-accessible { display: flex; }
     .settings-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-4) var(--space-6) var(--space-6); display: grid; gap: var(--space-6); align-content: start; }
     .settings-foot { flex: none; display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: space-between; padding: var(--space-4) var(--space-6); border-top: 1px solid var(--md-sys-color-outline-variant); }
     .s-group { display: grid; gap: var(--space-3); border: 0; margin: 0; padding: 0; min-width: 0; }
@@ -782,7 +801,7 @@
     /* ===== Screen reader mode: data table replaces the donut and legend ===== */
     .sr-data { display: none; margin-top: var(--space-2); }
     html[data-sr="on"] .sr-data { display: block; }
-    html[data-sr="on"] .chart-box, html[data-sr="on"] .legend, html[data-sr="on"] .tip, html[data-sr="on"] .confetti, html[data-sr="on"] .face .hint[data-visual] { display: none; }
+    html[data-sr="on"] .chart-box, html[data-sr="on"] .savings-bars, html[data-sr="on"] .legend, html[data-sr="on"] .tip, html[data-sr="on"] .confetti, html[data-sr="on"] .face .hint[data-visual] { display: none !important; }
     .table-wrap { max-width: 100%; overflow-x: auto; }
     .sr-table { width: 100%; border-collapse: collapse; text-align: left; font: var(--md-sys-typescale-body-medium); letter-spacing: var(--md-sys-typescale-body-medium-tracking); }
     .sr-table caption { text-align: left; padding-bottom: var(--space-2); font: var(--md-sys-typescale-title-small); font-weight: var(--md-sys-typescale-heading-weight); color: var(--md-sys-color-heading); }
@@ -909,7 +928,7 @@
         <header class="feat-head">
           <div>
             <h2 id="feat-title">Your savings, made simple</h2>
-            <p>Tap a slice to jump to its pot. Use the flip button to see what's going out each month.</p>
+            <p>Select a chart category to open its pot. Choose a chart in the accessible layout, or flip to see what's going out each month.</p>
           </div>
           <div class="head-right">
             <span class="balance-pill" id="mainBal"></span>
@@ -931,9 +950,16 @@
                   <h3 id="frontTitle">Savings summary</h3>
                   <button type="button" class="btn text" data-action="flip" id="flipToSubs">Show subscriptions</button>
                 </div>
+                <div class="chart-view-controls" id="saveChartControls">
+                  <div class="segmented" role="group" aria-label="Savings chart type">
+                    <button type="button" id="savePieView" data-action="save-chart-view" data-view="pie" aria-pressed="true">Pie chart</button>
+                    <button type="button" id="saveBarView" data-action="save-chart-view" data-view="bar" aria-pressed="false">Bar graph</button>
+                  </div>
+                </div>
                 <div class="chart-box" id="chartSave"></div>
+                <ul class="savings-bars" id="barSave" aria-label="Savings by category bar graph"></ul>
                 <div class="sr-data" id="srSave"></div>
-                <p class="hint" data-visual style="text-align:center">Tap a slice to jump to that pot. Use the flip button to see subscriptions.</p>
+                <p class="hint" data-visual style="text-align:center">Select a chart category to open that pot. Use the flip button to see subscriptions.</p>
                 <ul class="legend" id="legendSave" aria-label="Savings legend"></ul>
               </section>
               <section class="face back card" id="faceBack" aria-labelledby="backTitle" inert>
@@ -1119,9 +1145,9 @@
     </div>
     <div class="settings-body">
       <div class="s-easy">
-        <h3 id="sEasyTitle">Easy read</h3>
-        <p class="hint" id="sEasyHint">One click for the simple, plain, high-legibility layout.</p>
-        <button type="button" class="btn tonal" id="set-easy" aria-describedby="sEasyHint">Switch to Easy read</button>
+        <h3 id="sEasyTitle">Accessible layout</h3>
+        <p class="hint" id="sEasyHint">Switch between the standard and accessible layouts.</p>
+        <button type="button" class="btn tonal" id="set-easy" aria-describedby="sEasyHint">Switch to accessible layout</button>
       </div>
 
       <section class="s-preview" aria-labelledby="sPreviewTitle">
@@ -1131,11 +1157,28 @@
       </section>
 
       <section class="s-group" aria-labelledby="sModeH">
-        <h3 id="sModeH">Display mode</h3>
-        <p class="hint">Vibe is bold and colourful. Classic / Easy read goes back to the original plain look in a single column.</p>
+        <h3 id="sModeH">Layout mode</h3>
+        <p class="hint">Choose the standard layout or the simpler accessible layout.</p>
         <fieldset class="chips" aria-labelledby="sModeH">
-          <label class="chip"><input type="radio" name="set-theme" value="vibe" />Vibe (colourful)</label>
-          <label class="chip"><input type="radio" name="set-theme" value="classic" />Classic / Easy read</label>
+          <label class="chip"><input type="radio" name="set-theme" value="vibe" />Standard</label>
+          <label class="chip"><input type="radio" name="set-theme" value="classic" />Accessible</label>
+        </fieldset>
+      </section>
+
+      <section class="s-group" aria-labelledby="sPaletteH">
+        <h3 id="sPaletteH">Colour theme</h3>
+        <p class="hint">Choose a clear colour theme. Accessible Custom follows your background and text colour choices below.</p>
+        <fieldset class="chips palette-options palette-standard" aria-labelledby="sPaletteH">
+          <legend>Standard themes</legend>
+          <label class="chip"><input type="radio" name="set-palette-standard" value="light" />Light</label>
+          <label class="chip"><input type="radio" name="set-palette-standard" value="dark" />Dark</label>
+          <label class="chip"><input type="radio" name="set-palette-standard" value="fun" />Fun</label>
+        </fieldset>
+        <fieldset class="chips palette-options palette-accessible" aria-labelledby="sPaletteH">
+          <legend>Accessible themes</legend>
+          <label class="chip"><input type="radio" name="set-palette-accessible" value="light" />Light</label>
+          <label class="chip"><input type="radio" name="set-palette-accessible" value="dark" />Dark</label>
+          <label class="chip"><input type="radio" name="set-palette-accessible" value="custom" />Custom</label>
         </fieldset>
       </section>
 
@@ -1393,7 +1436,7 @@
     }
     var state = load();
     function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
-    var ui = { open: null, flipped: false, chat: [] };
+    var ui = { open: null, flipped: false, chat: [], barView: root.dataset.theme === 'classic' };
 
     function savings() { return pot('savings'); }
     function pot(id) { return state.pots.filter(function (p) { return p.id === id; })[0]; }
@@ -1505,6 +1548,14 @@
 
     var saveDonut = new Donut($('#chartSave'), 'Savings split by pot', flip, goToPot, 'Go to pot');
     var subsDonut = new Donut($('#chartSubs'), 'Monthly subscriptions split by service', flip, goToSub, 'Go to subscription');
+    function setSavingsChartView(bar) {
+      ui.barView = !!bar;
+      $('#chartSave').classList.toggle('bar-hidden', ui.barView);
+      $('#barSave').classList.toggle('active', ui.barView);
+      $('#savePieView').setAttribute('aria-pressed', !ui.barView);
+      $('#saveBarView').setAttribute('aria-pressed', ui.barView);
+    }
+    setSavingsChartView(ui.barView);
 
     /* ---------- flip ---------- */
     function flip() {
@@ -1545,6 +1596,10 @@
       var items = state.pots.map(function (p) { return { id: p.id, name: p.name, icon: p.icon, value: p.balance, colour: potColour(p) }; }).filter(function (i) { return i.value > 0; });
       saveDonut.update(items, 'Total savings', fmt(total()));
       var tot = total();
+      $('#barSave').innerHTML = state.pots.map(function (p) {
+        var pc = tot ? Math.round(p.balance / tot * 100) : 0;
+        return '<li><button type="button" class="savings-bar" data-action="goto-pot" data-id="' + p.id + '" aria-label="' + esc(p.name) + ', ' + fmt(p.balance) + ', ' + pc + '% of total savings. Go to pot"><span class="savings-bar-label"><strong>' + esc(p.name) + '</strong><span>' + fmt(p.balance) + ' · ' + pc + '%</span></span><span class="savings-bar-track" aria-hidden="true"><span class="savings-bar-fill" style="width:' + pc + '%;background:' + potColour(p) + '"></span></span></button></li>';
+      }).join('');
       $('#legendSave').innerHTML = state.pots.map(function (p) {
         var pc = tot ? Math.round(p.balance / tot * 100) : 0;
         return '<li><button type="button" class="legend-row" data-action="goto-pot" data-id="' + p.id + '" aria-label="' + esc(p.name) + ', ' + fmt(p.balance) + ', ' + pc + '%. Go to pot"><span class="sw" style="background:' + potColour(p) + '" aria-hidden="true"></span><span aria-hidden="true">' + esc(p.icon) + '</span><span class="nm">' + esc(p.name) + '</span><span>' + fmt(p.balance) + ' · ' + pc + '%</span></button></li>';
@@ -1609,7 +1664,14 @@
       return parts.join(' ');
     }
     window.NovaApp = { announce: announce, summary: summaryText };
-    document.addEventListener('novapay:settings', function () { render(); });
+    var chartLayout = root.dataset.theme;
+    document.addEventListener('novapay:settings', function () {
+      if (root.dataset.theme !== chartLayout) {
+        chartLayout = root.dataset.theme;
+        setSavingsChartView(chartLayout === 'classic');
+      }
+      render();
+    });
 
     function renderSubs() {
       $('#subList').innerHTML = state.subs.map(function (s) {
@@ -1813,6 +1875,7 @@
       var a = b.getAttribute('data-action'), id = b.getAttribute('data-id'), p = id && pot(id);
       if (a === 'flip') return flip();
       if (a === 'view') { if ((b.getAttribute('data-view') === 'subs') !== ui.flipped) flip(); return; }
+      if (a === 'save-chart-view') { setSavingsChartView(b.getAttribute('data-view') === 'bar'); say('Savings shown as a ' + (ui.barView ? 'bar graph' : 'pie chart')); return; }
       if (a === 'reset') {
         return ask({ title: 'Reset demo data?', msg: 'Reset everything back to the demo data? Your changes will be lost.', ok: 'Yes, reset', no: 'Keep my data', back: function () { return $('#resetBtn'); },
           onOk: function () { state = seed(); ui.open = null; ui.chat = []; save(); render(); $('#resetBtn').focus(); say('Demo data reset'); } });
@@ -2238,12 +2301,23 @@
 
       function easyLabel() {
         var classic = s.theme === 'classic';
-        el('set-easy').textContent = classic ? 'Switch back to Vibe' : 'Switch to Easy read';
-        el('sEasyHint').textContent = classic ? 'You are using the simple, plain, high-legibility layout.' : 'One click for the simple, plain, high-legibility layout.';
+        el('set-easy').textContent = classic ? 'Switch to standard layout' : 'Switch to accessible layout';
+        el('sEasyHint').textContent = classic ? 'You are using the accessible, single-column layout.' : 'Switch to a simpler, high-legibility layout.';
+      }
+      function fillPalette() {
+        radios('set-palette-standard').forEach(function (r) { r.checked = r.value === s.palette; });
+        radios('set-palette-accessible').forEach(function (r) { r.checked = r.value === s.palette; });
+      }
+      function setLayout(theme) {
+        s.theme = theme;
+        if (theme === 'classic' && s.palette === 'fun') s.palette = s.bg === 'default' ? 'light' : 'custom';
+        if (theme === 'vibe' && s.palette === 'custom') s.palette = 'fun';
+        fill(); commit(theme === 'classic' ? 'Accessible layout on' : 'Standard layout on');
       }
       var OFF = ['contrast', 'motion', 'focus', 'links', 'cb', 'targets', 'reading', 'sr'];
       function fill() {
         radios('set-theme').forEach(function (r) { r.checked = r.value === s.theme; });
+        fillPalette();
         radios('set-bg').forEach(function (r) { r.checked = r.value === s.bg; });
         radios('set-text').forEach(function (r) { r.checked = r.value === String(s.text); });
         radios('set-font').forEach(function (r) { r.checked = r.value === s.font; });
@@ -2326,14 +2400,23 @@
       }
       panel.addEventListener('input', function (e) {
         var t = e.target;
-        if (t.id === 'set-custom-bg') { s.bg = 'custom'; s.customBg = t.value; el('set-custom-dot').style.background = t.value; radios('set-bg').forEach(function (r) { r.checked = r.value === 'custom'; }); commit(); }
-        else if (t.id === 'set-custom-text') { s.bg = 'custom'; s.customText = t.value; radios('set-bg').forEach(function (r) { r.checked = r.value === 'custom'; }); commit(); }
+        if (t.id === 'set-custom-bg') { s.bg = 'custom'; s.customBg = t.value; if (s.theme === 'classic') s.palette = 'custom'; el('set-custom-dot').style.background = t.value; radios('set-bg').forEach(function (r) { r.checked = r.value === 'custom'; }); fillPalette(); commit(); }
+        else if (t.id === 'set-custom-text') { s.bg = 'custom'; s.customText = t.value; if (s.theme === 'classic') s.palette = 'custom'; radios('set-bg').forEach(function (r) { r.checked = r.value === 'custom'; }); fillPalette(); commit(); }
         else if (t.id === 'ra-rate') { s.rate = parseFloat(t.value); el('ra-rate-l').textContent = 'Speech rate: ' + s.rate + '×'; T.save(s); }
       });
       panel.addEventListener('change', function (e) {
         var t = e.target, id = t.id || '', msg;
-        if (t.name === 'set-theme') { s.theme = t.value; msg = 'Display mode: ' + label(t); }
-        else if (t.name === 'set-bg') { s.bg = t.value; msg = 'Background: ' + label(t); }
+        if (t.name === 'set-theme') { setLayout(t.value); return; }
+        else if (t.name === 'set-palette-standard' || t.name === 'set-palette-accessible') {
+          s.palette = t.value;
+          if (t.value !== 'custom') s.bg = 'default';
+          msg = 'Colour theme: ' + label(t);
+        }
+        else if (t.name === 'set-bg') {
+          s.bg = t.value;
+          if (s.theme === 'classic') s.palette = 'custom';
+          fillPalette(); msg = 'Background: ' + label(t);
+        }
         else if (t.name === 'set-text') { s.text = parseInt(t.value, 10); msg = 'Text size: ' + label(t); }
         else if (t.name === 'set-font') { s.font = t.value; msg = 'Font: ' + label(t); }
         else if (/^set-(lh|ls|ws|ps)$/.test(id)) { s[id.slice(4)] = t.value; msg = el(id).labels[0].textContent + ': ' + t.options[t.selectedIndex].text; }
@@ -2347,7 +2430,7 @@
         commit(msg);
       });
       el('set-easy').addEventListener('click', function () {
-        s.theme = s.theme === 'classic' ? 'vibe' : 'classic'; fill(); commit(s.theme === 'classic' ? 'Easy read layout on' : 'Vibe layout on');
+        setLayout(s.theme === 'classic' ? 'vibe' : 'classic');
       });
       el('set-custom-text-clear').addEventListener('click', function () { s.customText = ''; fill(); commit('Custom text colour cleared'); el('set-custom-text').focus(); });
       el('set-reset').addEventListener('click', function () {
