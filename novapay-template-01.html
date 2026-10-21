@@ -798,6 +798,14 @@
     .read-aloud[hidden] { display: none; }
     .read-aloud { display: grid; gap: var(--space-3); }
 
+    .sr-quick { width: 100%; display: flex; align-items: center; gap: var(--space-4); margin: 0 0 var(--space-4); padding: var(--space-4); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-sys-shape-corner-large); background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font: inherit; text-align: left; cursor: pointer; }
+    .sr-quick:hover { background: color-mix(in srgb, var(--md-sys-color-primary-container) 90%, var(--md-sys-color-on-primary-container)); }
+    .sr-quick[aria-pressed="true"] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+    .sr-quick svg { width: 2rem; height: 2rem; flex: none; fill: currentColor; }
+    .sr-quick-copy { display: grid; gap: var(--space-1); min-width: 0; }
+    .sr-quick-title { font: var(--md-sys-typescale-title-large); font-weight: 700; }
+    .sr-quick-hint { font: var(--md-sys-typescale-body-medium); }
+
     /* ===== Screen reader mode: data table replaces the donut and legend ===== */
     .sr-data { display: none; margin-top: var(--space-2); }
     html[data-sr="on"] .sr-data { display: block; }
@@ -898,6 +906,10 @@
     </div>
   </header>
   <main class="shell" id="main" tabindex="-1">
+    <button type="button" class="sr-quick" id="srQuick" aria-label="Screen reader mode" aria-describedby="srQuickHint" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zm-2.5-9.77v2.06a8 8 0 0 1 0 15.42v2.06a10 10 0 0 0 0-19.54z"/></svg>
+      <span class="sr-quick-copy"><span class="sr-quick-title">Screen reader</span><span class="sr-quick-hint" id="srQuickHint">Turn on screen reader support and read-aloud tools.</span></span>
+    </button>
     <section class="hero" aria-labelledby="title">
       <div class="hero-art" aria-hidden="true"><svg viewBox="0 0 400 104" preserveAspectRatio="xMaxYMid meet" focusable="false"><path class="blob-b" d="M236 60c-6-26 14-50 44-52 26-2 40 14 38 36-2 26-24 52-52 52-20 0-26-16-30-36z"/><path class="blob-a" d="M262 30c18-20 52-22 78-8 26 14 40 44 26 66-14 20-48 24-74 14-30-12-48-52-30-72z"/><circle class="blob-c" cx="376" cy="22" r="14"/></svg></div>
       <div class="eyebrow">NovaPay feature starter</div>
@@ -2281,10 +2293,15 @@
       var T = window.NovaTheme, root = document.documentElement;
       var panel = document.getElementById('settingsPanel'), scrim = document.getElementById('settingsScrim'), trigger = document.getElementById('settingsBtn');
       var closeBtn = document.getElementById('settingsClose');
+      var quickSr = document.getElementById('srQuick');
       var s = T.load(), isOpen = false;
       function el(id) { return document.getElementById(id); }
       function announce(msg, urgent) { if (window.NovaApp) window.NovaApp.announce(msg, urgent); }
       function radios(name) { return Array.prototype.slice.call(panel.querySelectorAll('input[name="' + name + '"]')); }
+      function syncSrQuick() {
+        quickSr.setAttribute('aria-pressed', String(!!s.sr));
+        el('set-sr').checked = !!s.sr;
+      }
 
       function note(res) {
         var bgc, ink, n = el('set-bg-note'), w = el('set-bg-warn');
@@ -2326,12 +2343,12 @@
         el('set-custom-bg').value = s.customBg; el('set-custom-dot').style.background = s.customBg;
         el('set-custom-text').value = s.customText || '#000000';
         el('ra-rate').value = s.rate; el('ra-rate-l').textContent = 'Speech rate: ' + s.rate + '×';
-        easyLabel();
+        easyLabel(); syncSrQuick();
       }
       function commit(announceMsg) {
         T.save(s);
         var res = T.apply(s);
-        note(res); easyLabel(); readAloudState();
+        note(res); easyLabel(); syncSrQuick(); readAloudState();
         document.dispatchEvent(new CustomEvent('novapay:settings'));
         if (announceMsg) announce(announceMsg);
       }
@@ -2381,6 +2398,10 @@
         return Array.prototype.filter.call(panel.querySelectorAll('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'), function (n) { return !n.disabled && !n.hidden && !n.closest('[hidden]') && n.getClientRects().length; });
       }
       trigger.addEventListener('click', function () { isOpen ? close() : open(); });
+      quickSr.addEventListener('click', function () {
+        s.sr = !s.sr;
+        commit('Screen reader mode ' + (s.sr ? 'on. Charts are now shown as tables.' : 'off.'));
+      });
       closeBtn.addEventListener('click', close); el('set-done').addEventListener('click', close);
       scrim.addEventListener('click', close);
       document.addEventListener('keydown', function (e) {
