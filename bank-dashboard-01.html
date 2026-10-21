@@ -36,7 +36,7 @@
       --hero-from:    #0F1340;
       --hero-mid:     #1A1560;
       --hero-to:      #2D1B69;
-      --accent:       #6C63FF;
+      --accent:       #5146D8;
       --accent-light: #EEEEFF;
       --text:         #0D0F1C;
       --muted:        #4A5068;
@@ -228,7 +228,7 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: #000;
       margin-bottom: 6px;
     }
 
@@ -254,7 +254,7 @@
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text);
+      color: #000;
       margin-bottom: 16px;
     }
 
@@ -342,6 +342,11 @@
     }
     input:focus-visible { border-color: var(--accent); outline: 3px solid var(--accent); outline-offset: 2px; }
 
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid #4B43C8;
+      outline-offset: 3px;
+    }
+
     .btn {
       display: block;
       width: 100%;
@@ -356,6 +361,7 @@
       color: white;
       cursor: pointer;
     }
+    .btn:hover { filter: brightness(0.92); }
 
     .btn-ghost {
       background: var(--accent-light);
@@ -401,6 +407,16 @@
     /* ── CALC GRID ─────��────────────────────── */
     /* MAKEOVER? Squash your browser window to phone width. What happens here? */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    @media (max-width: 480px) {
+      .app-header { padding: 0 16px; }
+      .main { gap: 20px; padding: 20px 12px; }
+      .balance-hero { padding: 24px 20px; }
+      .balance-amount { font-size: clamp(2.25em, 12vw, 3em); }
+      .balance-footer { align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+      .card { padding: 18px; }
+      .two-col { grid-template-columns: 1fr; gap: 0; }
+    }
   </style>
 </head>
 <body>
@@ -422,7 +438,7 @@
 
     <!-- Balance card -->
     <div class="balance-hero">
-      <div class="balance-eyebrow">Current Balance</div>
+      <h1 class="balance-eyebrow">Current Balance</h1>
       <div class="balance-amount" id="balance-display">£1,250.00</div>
       <div class="balance-footer">
         <div class="account-name">Alex Chen · Current Account</div>
@@ -443,7 +459,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title">Recent Transactions</div>
+      <h2 class="card-title">Recent Transactions</h2>
 
       <div class="tx-item">
         <div class="tx-icon">☕</div>
