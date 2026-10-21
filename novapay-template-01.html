@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>NovaPay — Empty Feature Template</title>
   <style>
     :root {
@@ -25,7 +25,8 @@
       background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 45%, #edf0f7 100%);
       color: var(--text);
       line-height: 1.5;
-      padding: 32px 16px 48px;
+      padding: 32px 16px calc(120px + env(safe-area-inset-bottom, 0px));
+      overflow-x: hidden;
     }
 
     .shell {
@@ -183,7 +184,7 @@
     .feat-head p { color: var(--muted); }
     .head-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .balance-pill { background: var(--tint); color: #2b2490; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(90,80,224,.25); }
-    .top-grid { display: grid; gap: 22px; grid-template-columns: 1fr; }
+    .top-grid { display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
     .card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 18px; box-shadow: 0 4px 14px rgba(26,29,41,.05); }
     .feat button, .feat input, .feat select, .feat textarea { font: inherit; }
     .btn { cursor: pointer; border: 2px solid var(--accent); background: var(--accent); color: #fff; font-weight: 700; padding: 9px 16px; border-radius: 999px; min-height: 44px; transition: transform .15s, background .15s; }
@@ -201,7 +202,7 @@
     .hint { color: var(--muted); font-size: .9rem; }
 
     .flip { perspective: 1400px; }
-    .flip-inner { display: grid; transition: transform .8s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+    .flip-inner { display: grid; grid-template-columns: minmax(0, 1fr); transition: transform .8s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
     .flip-inner.flipped { transform: rotateY(180deg); }
     .face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
     .face.back { transform: rotateY(180deg); }
@@ -270,7 +271,25 @@
     .sub.cancelled .meta { color: #065f46; font-weight: 700; }
     .sub .confirm { flex-basis: 100%; }
 
-    .coach .log { display: grid; gap: 10px; max-height: 460px; overflow-y: auto; padding: 4px; }
+    .coach-fab { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); z-index: 1000; width: 64px; height: 64px; border-radius: 50%; border: 3px solid #fff; background: var(--accent); color: #fff; font-size: 1.9rem; line-height: 1; cursor: pointer; display: grid; place-items: center; box-shadow: 0 10px 28px rgba(26,29,41,.35); transition: transform .15s, background .15s; }
+    .coach-fab:hover { transform: scale(1.06); background: #4338ca; }
+    .coach-backdrop { position: fixed; inset: 0; z-index: 1001; background: rgba(26,29,41,.45); opacity: 0; visibility: hidden; transition: opacity .25s, visibility 0s .25s; }
+    .coach-backdrop.open { opacity: 1; visibility: visible; transition-delay: 0s; }
+    .coach-panel { position: fixed; z-index: 1002; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); width: min(400px, calc(100vw - 32px)); max-height: min(640px, calc(100vh - 32px)); max-height: min(640px, calc(100dvh - 32px)); display: flex; flex-direction: column; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 16px; box-shadow: 0 24px 60px rgba(26,29,41,.4); opacity: 0; visibility: hidden; transform: translateY(24px) scale(.97); transform-origin: bottom right; transition: opacity .25s, transform .25s, visibility 0s .25s; }
+    .coach-panel.open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+    .coach-panel:focus { outline: none; }
+    .coach-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .coach-close { cursor: pointer; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--border); background: #fff; color: #000; font-size: 1.3rem; line-height: 1; }
+    .coach-close:hover { background: var(--tint); }
+    .coach .log { display: grid; gap: 10px; flex: 1 1 auto; min-height: 120px; overflow-y: auto; padding: 4px; }
+    .coach .quick { flex: none; max-height: 40%; overflow-y: auto; }
+    @media (max-width: 600px) {
+      .coach-panel { left: max(8px, env(safe-area-inset-left, 0px)); right: max(8px, env(safe-area-inset-right, 0px)); bottom: max(8px, env(safe-area-inset-bottom, 0px)); width: auto; max-height: calc(100vh - 16px); max-height: calc(100dvh - 16px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .coach-fab, .coach-backdrop, .coach-panel { transition: none; }
+      .coach-panel { transform: none; }
+    }
     .bubble-row { display: flex; gap: 10px; align-items: flex-start; }
     .bubble-row.me { justify-content: flex-end; }
     .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; font-size: 1.4rem; flex: none; border: 2px solid var(--accent); }
@@ -292,12 +311,12 @@
     @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .8; } }
 
     @media (min-width: 900px) {
-      .top-grid { grid-template-columns: 1.1fr .9fr; align-items: start; }
       .actions { grid-template-columns: 1fr 1fr; }
       .pots { grid-template-columns: 1fr; }
     }
 
     .ic-section {
+      min-width: 0;
       margin-top: 22px;
       padding: 24px;
       border: 1px solid var(--border);
@@ -327,9 +346,19 @@
 
     .ic-form {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
-      gap: 16px;
-      align-items: end;
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 16px;
+      row-gap: 0;
+      align-items: start;
+    }
+
+    .ic-field {
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+      row-gap: 0;
+      min-width: 0;
+      margin-bottom: 18px;
     }
 
     .ic-field label {
@@ -337,11 +366,14 @@
       margin-bottom: 6px;
       color: var(--ink);
       font-weight: 700;
+      align-self: end;
     }
 
     .ic-field input, .ic-field select {
+      display: block;
       width: 100%;
-      min-height: 46px;
+      min-width: 0;
+      height: 46px;
       padding: 10px 12px;
       border: 1px solid #73798a;
       border-radius: 10px;
@@ -357,8 +389,17 @@
 
     .ic-time-controls {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 8px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 600px) {
+      .ic-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 960px) {
+      .ic-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     .ic-hint {
@@ -373,10 +414,11 @@
       flex-wrap: wrap;
       gap: 10px;
       grid-column: 1 / -1;
+      align-items: stretch;
     }
 
     .ic-button {
-      min-height: 44px;
+      min-height: 46px;
       padding: 10px 18px;
       border: 2px solid #4338b8;
       border-radius: 10px;
@@ -446,7 +488,7 @@
       font-weight: 800;
     }
 
-    .ic-breakdown-wrap { overflow-x: auto; }
+    .ic-breakdown-wrap { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     .ic-breakdown {
       width: 100%;
@@ -550,7 +592,7 @@
       <div class="feat" id="app">
         <header class="feat-head">
           <div>
-            <h2 id="feat-title">Your savings, made simple 🐷</h2>
+            <h2 id="feat-title">Your savings, made simple</h2>
             <p>Tap the chart to flip it and see what's going out each month.</p>
           </div>
           <div class="head-right">
@@ -578,7 +620,7 @@
               </section>
               <section class="face back card" id="faceBack" aria-labelledby="backTitle" inert>
                 <div class="face-head">
-                  <h3 id="backTitle">Money going out 💸</h3>
+                  <h3 id="backTitle">Money going out</h3>
                   <button type="button" class="btn ghost" data-action="flip" id="flipBtnBack" aria-label="Flip chart back to savings">Back to savings ↻</button>
                 </div>
                 <div class="chart-box" id="chartSubs"></div>
@@ -600,18 +642,24 @@
             </div>
           </div>
 
-          <aside class="card coach" aria-labelledby="coachTitle">
-            <h3 id="coachTitle">Savings Coach</h3>
-            <div class="log" id="coachLog" aria-live="polite" aria-label="Coach messages"></div>
-            <div class="quick" id="quick" role="group" aria-label="Quick questions">
-              <button type="button" class="btn ghost" data-action="ask" data-q="faster">How can I reach my goal faster?</button>
-              <button type="button" class="btn ghost" data-action="ask" data-q="subs">Which subscription should I cancel?</button>
-              <button type="button" class="btn ghost" data-action="ask" data-q="emergency">How's my Emergency Fund?</button>
-              <button type="button" class="btn ghost" data-action="ask" data-q="challenge">Give me a challenge!</button>
-            </div>
-            <p class="hint">Friendly guidance only, not financial advice.</p>
-          </aside>
         </div>
+
+        <button type="button" class="coach-fab" id="coachBtn" aria-label="Open Savings Coach" aria-expanded="false" aria-controls="coachPanel" aria-haspopup="dialog"><span aria-hidden="true">🦊</span></button>
+        <div class="coach-backdrop" id="coachBackdrop"></div>
+        <section class="coach coach-panel" id="coachPanel" role="dialog" aria-modal="true" aria-labelledby="coachTitle" tabindex="-1">
+          <div class="coach-head">
+            <h3 id="coachTitle">Savings Coach</h3>
+            <button type="button" class="coach-close" id="coachClose" aria-label="Close Savings Coach"><span aria-hidden="true">✕</span></button>
+          </div>
+          <div class="log" id="coachLog" aria-live="polite" aria-label="Coach messages"></div>
+          <div class="quick" id="quick" role="group" aria-label="Quick questions">
+            <button type="button" class="btn ghost" data-action="ask" data-q="faster">How can I reach my goal faster?</button>
+            <button type="button" class="btn ghost" data-action="ask" data-q="subs">Which subscription should I cancel?</button>
+            <button type="button" class="btn ghost" data-action="ask" data-q="emergency">How's my Emergency Fund?</button>
+            <button type="button" class="btn ghost" data-action="ask" data-q="challenge">Give me a challenge!</button>
+          </div>
+          <p class="hint">Friendly guidance only, not financial advice.</p>
+        </section>
 
         <section aria-labelledby="potsTitle">
           <h3 id="potsTitle">Your savings pots</h3>
@@ -729,7 +777,8 @@
       laptop: { icon: '💻', name: 'Laptop', target: '600' },
       custom: { icon: '✨', name: '', target: '' }
     };
-    var COLOURS = ['#5a50e0', '#0f766e', '#b45309', '#be185d', '#1d4ed8', '#6d28d9', '#15803d', '#b91c1c'];
+    var COLOURS = ['#4338ca', '#0d9488', '#d97706', '#db2777', '#0284c7', '#4d7c0f', '#9333ea', '#dc2626'];
+    var EM_COLOUR = '#1a1d29';
     var MAX_PENCE = 100000000;
     var DAY = 86400000;
 
@@ -826,10 +875,7 @@
     function Donut(box, label, onFlip) {
       var self = this;
       this.box = box; this.uid = 'd' + (++donutCount); this.onFlip = onFlip; this.ids = ''; this.shown = {}; this.items = []; this.touch = false;
-      var defs = '';
-      for (var i = 0; i < 8; i++) defs += patDef(this.uid + '-' + i, COLOURS[i], i % 4);
-      defs += patDef(this.uid + '-em', '#1a1d29', 'em');
-      box.innerHTML = '<svg class="donut" viewBox="-110 -110 220 220" role="group" aria-label="' + esc(label) + '"><defs>' + defs + '</defs>' +
+      box.innerHTML = '<svg class="donut" viewBox="-110 -110 220 220" role="group" aria-label="' + esc(label) + '">' +
         '<circle class="empty" r="81" fill="none" stroke="#d1d5db" stroke-width="38"></circle><g class="segs"></g><path class="hl" d=""></path></svg>' +
         '<div class="centre"><span class="small"></span><span class="big"></span></div><div class="tip" hidden></div>';
       this.segs = $('.segs', box); this.hl = $('.hl', box); this.tip = $('.tip', box); this.empty = $('.empty', box);
@@ -838,15 +884,7 @@
         self.touch = false; self.onFlip();
       });
     }
-    function patDef(id, col, kind) {
-      var o = '';
-      if (kind === 0) o = '<path d="M0 8L8 0" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>';
-      if (kind === 1) o = '<circle cx="4" cy="4" r="1.6" fill="#fff" fill-opacity=".7"/>';
-      if (kind === 2) o = '<path d="M0 4H8M4 0V8" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/>';
-      if (kind === 'em') o = '<path d="M0 0L8 8M8 0L0 8" stroke="#fbbf24" stroke-width="1.6"/>';
-      return '<pattern id="pat-' + id + '" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="' + col + '"/>' + o + '</pattern>';
-    }
-    Donut.prototype.patId = function (it) { return 'pat-' + this.uid + '-' + (it.locked ? 'em' : (it.c % 8)); };
+    Donut.prototype.colour = function (it) { return it.locked ? EM_COLOUR : COLOURS[it.c % 8]; };
     Donut.prototype.update = function (items, small, big) {
       var self = this, ids = items.map(function (i) { return i.id; }).join('|');
       $('.small', this.box).textContent = small; $('.big', this.box).textContent = big;
@@ -858,7 +896,7 @@
         items.forEach(function (it) {
           var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
           g.setAttribute('class', 'seg'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('data-id', it.id);
-          g.innerHTML = '<path fill="url(#' + self.patId(it) + ')"></path><circle r="11" fill="#fff" fill-opacity=".9"></circle><text text-anchor="middle" dominant-baseline="central" font-size="14" aria-hidden="true"></text>';
+          g.innerHTML = '<path fill="' + self.colour(it) + '"></path>';
           g.addEventListener('mouseenter', function () { self.show(it.id); });
           g.addEventListener('mouseleave', function () { self.hide(); });
           g.addEventListener('focus', function () { self.show(it.id); });
@@ -873,7 +911,6 @@
       items.forEach(function (it, i) {
         var g = self.segs.children[i];
         g.setAttribute('aria-label', it.name + ', ' + fmt(it.value) + ', ' + it.pct + ' percent of total. Press Enter to flip the chart.');
-        $('text', g).textContent = it.icon;
       });
       var from = this.shown, to = {};
       items.forEach(function (it) { to[it.id] = it.value; });
@@ -894,12 +931,9 @@
       this.mid = {};
       this.items.forEach(function (it, i) {
         var g = self.segs.children[i], v = self.shown[it.id] || 0, span = sum ? v / sum * Math.PI * 2 : 0;
-        var p = $('path', g), c = $('circle', g), t = $('text', g);
+        var p = $('path', g);
         p.setAttribute('d', span > 0.001 ? arc(a, a + span) : '');
-        var mid = a + span / 2, show = span > 0.35;
-        var xy = pt(81, mid).split(' ');
-        c.setAttribute('cx', xy[0]); c.setAttribute('cy', xy[1]); t.setAttribute('x', xy[0]); t.setAttribute('y', xy[1]);
-        c.style.display = t.style.display = show ? '' : 'none';
+        var mid = a + span / 2;
         self.mid[it.id] = mid; a += span;
         if (self.active === it.id) self.hl.setAttribute('d', p.getAttribute('d'));
       });
@@ -911,7 +945,7 @@
       var m = this.mid[id] || 0, x = 50 + (90 * Math.sin(m)) / 2.2 * 1, y = 50 - (90 * Math.cos(m)) / 2.2;
       this.tip.hidden = false;
       this.tip.style.left = x + '%'; this.tip.style.top = y + '%';
-      this.tip.textContent = it.icon + ' ' + it.name + ': ' + fmt(it.value) + ' (' + it.pct + '%)';
+      this.tip.textContent = it.name + ': ' + fmt(it.value) + ' (' + it.pct + '%)';
     };
     Donut.prototype.hide = function () { this.active = null; this.hl.setAttribute('d', ''); this.tip.hidden = true; };
 
@@ -939,7 +973,7 @@
       saveDonut.update(items, 'Total savings', fmt(total()));
       var tot = total();
       $('#legendSave').innerHTML = state.pots.map(function (p) {
-        var sw = '<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="5" fill="url(#' + saveDonut.patId({ c: p.c || 0, locked: p.emergency }) + ')" stroke="#1a1d29" stroke-opacity=".4"/></svg>';
+        var sw = '<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="5" fill="' + saveDonut.colour({ c: p.c || 0, locked: p.emergency }) + '" stroke="#1a1d29" stroke-opacity=".4"/></svg>';
         return '<li>' + sw + '<span aria-hidden="true">' + esc(p.icon) + '</span><span class="nm">' + esc(p.name) + '</span><span>' + fmt(p.balance) + ' · ' + (tot ? Math.round(p.balance / tot * 100) : 0) + '%</span></li>';
       }).join('');
       var sitems = activeSubs().map(function (s) { return { id: s.id, name: s.name, icon: s.icon, value: s.cost, c: s.c || 0 }; });
@@ -1247,6 +1281,32 @@
     });
     $('#emCancel').addEventListener('click', function () { dlg.close(); });
     dlg.addEventListener('close', function () { emReset(); var b = $('#em-open'); if (b) b.focus(); });
+
+    /* ---------- coach panel ---------- */
+    var coachBtn = $('#coachBtn'), coachPanel = $('#coachPanel'), coachBackdrop = $('#coachBackdrop');
+    var coachOpen = false;
+    var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    function setCoach(open) {
+      coachOpen = open;
+      coachPanel.classList.toggle('open', open); coachBackdrop.classList.toggle('open', open);
+      coachBtn.setAttribute('aria-expanded', open); coachBtn.setAttribute('aria-label', open ? 'Close Savings Coach' : 'Open Savings Coach');
+      if (open) { renderCoach(); var l = $('#coachLog'); l.scrollTop = l.scrollHeight; coachPanel.focus(); $('#coachClose').focus(); }
+      else coachBtn.focus();
+    }
+    coachBtn.addEventListener('click', function () { setCoach(!coachOpen); });
+    $('#coachClose').addEventListener('click', function () { setCoach(false); });
+    coachBackdrop.addEventListener('click', function () { setCoach(false); });
+    document.addEventListener('keydown', function (e) {
+      if (!coachOpen) return;
+      if (e.key === 'Escape' && !dlg.open) { e.preventDefault(); return setCoach(false); }
+      if (e.key !== 'Tab') return;
+      var f = Array.prototype.filter.call(coachPanel.querySelectorAll(FOCUSABLE), function (n) { return n.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (!coachPanel.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
 
     /* ---------- init ---------- */
     buildPicker(); setPicker('✨');
