@@ -7,7 +7,7 @@
   <title>NovaPay — Empty Feature Template</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     /* Material 3 design tokens (single source of truth). Roles come from one seed colour; every rule below uses these tokens. */
     :root {
@@ -44,6 +44,9 @@
     --md-sys-color-surface-container-high: #ebe7ec;
     --md-sys-color-surface-container-highest: #e5e1e6;
     --md-sys-color-scrim: #000000;
+    /* Headings: bold weight and the darkest on-surface colour (black on light, white on dark; both pass WCAG AA) */
+    --md-sys-color-heading: #000000;
+    --md-sys-typescale-heading-weight: 700;
 
     /* Material 3 type scale: size, line-height, weight, tracking per role */
     --md-ref-typeface-brand: 'Roboto Flex', 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -185,6 +188,7 @@
       --md-sys-color-surface-container: #201f23;
       --md-sys-color-surface-container-high: #2a292d;
       --md-sys-color-surface-container-highest: #353438;
+      --md-sys-color-heading: #ffffff;
       }
     }
 
@@ -315,7 +319,8 @@
     .flip-inner.flipped { transform: rotateY(180deg); }
     .face { grid-area: 1 / 1; align-self: start; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
     .face.back { transform: rotateY(180deg); }
-    .face-head { margin-bottom: var(--space-2); }
+    .face.collapsed { display: none; }
+    .face-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-2); }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
       .flip-inner, .flip-inner.flipped { transform: none; }
@@ -327,7 +332,7 @@
     }
 
     /* Pie / donut chart: solid fills, consistent gaps, inverse-surface tooltip */
-    .chart-box { position: relative; width: min(100%, 340px); aspect-ratio: 1; margin: var(--space-2) auto; cursor: pointer; }
+    .chart-box { position: relative; width: min(100%, 340px); aspect-ratio: 1; margin: var(--space-2) auto; }
     .donut { width: 100%; height: 100%; display: block; overflow: visible; }
     .empty { stroke: var(--md-sys-color-surface-container-highest); }
     .seg { cursor: pointer; outline: none; }
@@ -339,7 +344,9 @@
     .tip { position: absolute; z-index: 5; transform: translate(-50%, -115%); background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface); padding: var(--space-2) var(--space-3); border-radius: var(--md-sys-shape-corner-extra-small); font: var(--md-sys-typescale-body-small); letter-spacing: var(--md-sys-typescale-body-small-tracking); white-space: nowrap; pointer-events: none; }
     .tip[hidden] { display: none; }
     .legend { list-style: none; padding: 0; margin: var(--space-4) 0 0; display: grid; gap: var(--space-2); }
-    .legend li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); padding: var(--space-2) var(--space-4); border-radius: var(--md-sys-shape-corner-medium); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); font: var(--md-sys-typescale-body-medium); letter-spacing: var(--md-sys-typescale-body-medium-tracking); }
+    .legend li { display: block; }
+    .legend-row { appearance: none; width: 100%; min-height: 48px; border: 0; text-align: left; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); padding: var(--space-2) var(--space-4); border-radius: var(--md-sys-shape-corner-medium); background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface); font: var(--md-sys-typescale-body-medium); letter-spacing: var(--md-sys-typescale-body-medium-tracking); }
+    .legend-row:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, var(--md-sys-color-surface-container)); }
     .legend .nm { font: var(--md-sys-typescale-label-large); letter-spacing: var(--md-sys-typescale-label-large-tracking); flex: 1 1 100px; min-width: 0; overflow-wrap: anywhere; }
     .legend .sw { width: 24px; height: 24px; flex: none; border-radius: var(--md-sys-shape-corner-small); border: 1px solid var(--md-sys-color-outline-variant); }
 
@@ -348,7 +355,11 @@
     .pots { display: grid; gap: var(--space-4); }
     .pot { --pot: #607d8b; --on-pot: #000000; --container: var(--md-sys-color-surface-container-low); position: relative; background: var(--md-sys-color-surface-container-low); border-radius: var(--md-sys-shape-corner-large); overflow: hidden; box-shadow: var(--md-sys-elevation-1); }
     .pot::before { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--space-2); background: var(--pot); }
+    .pot { scroll-margin-top: var(--space-6); }
     .pot.em { outline: 2px solid var(--md-sys-color-outline); outline-offset: -2px; }
+    .pot.main { outline: 2px solid var(--md-sys-color-primary); outline-offset: -2px; background: var(--md-sys-color-primary-container); --container: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+    .pot.main .pot-toggle { color: var(--md-sys-color-on-primary-container); }
+    .pot.flash { outline: 4px solid var(--md-sys-color-primary); outline-offset: -4px; }
     .pot h3 { font: var(--md-sys-typescale-title-medium); letter-spacing: var(--md-sys-typescale-title-medium-tracking); margin: 0; }
     .pot-toggle { appearance: none; border: 0; background: transparent; color: var(--md-sys-color-on-surface); text-align: left; width: 100%; min-height: 64px; padding: var(--space-3) var(--space-4) var(--space-3) var(--space-6); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--space-4); row-gap: var(--space-1); align-items: center; cursor: pointer; font: var(--md-sys-typescale-title-medium); letter-spacing: var(--md-sys-typescale-title-medium-tracking); }
     .pot-toggle:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); }
@@ -484,6 +495,12 @@
     .ic-legend-item { display: inline-flex; align-items: center; gap: var(--space-2); }
     .ic-swatch { width: 18px; height: 14px; border: 1px solid var(--md-sys-color-outline); }
     .ic-note { font: var(--md-sys-typescale-body-small); letter-spacing: var(--md-sys-typescale-body-small-tracking); color: var(--md-sys-color-on-surface-variant); margin-top: var(--space-3); }
+
+    /* Bolder headings: every heading keeps its type-scale size and uses the heading weight and colour tokens */
+    .shell :is(h1, h2, h3, h4), .shell .pot-name, .shell .pot.main .pot-name { font-weight: var(--md-sys-typescale-heading-weight); color: var(--md-sys-color-heading); }
+    .shell .pot-name small { font-weight: 400; color: var(--md-sys-color-on-surface-variant); }
+    .shell .pot.main .pot-name small { color: var(--md-sys-color-on-primary-container); }
+    .ic-breakdown caption { font-weight: var(--md-sys-typescale-heading-weight); color: var(--md-sys-color-heading); }
   </style>
 </head>
 <body>
@@ -517,7 +534,7 @@
         <header class="feat-head">
           <div>
             <h2 id="feat-title">Your savings, made simple</h2>
-            <p>Tap the chart to flip it and see what's going out each month.</p>
+            <p>Tap a slice to jump to its pot. Use the flip button to see what's going out each month.</p>
           </div>
           <div class="head-right">
             <span class="balance-pill" id="mainBal"></span>
@@ -538,14 +555,16 @@
               <section class="face front card" id="faceFront" aria-labelledby="frontTitle">
                 <div class="face-head">
                   <h3 id="frontTitle">Savings summary</h3>
+                  <button type="button" class="btn text" data-action="flip" id="flipToSubs">Show subscriptions</button>
                 </div>
                 <div class="chart-box" id="chartSave"></div>
-                <p class="hint" style="text-align:center">Hover, tap or tab to a slice to see its amount. Press Enter to flip.</p>
+                <p class="hint" style="text-align:center">Tap a slice to jump to that pot. Use the flip button to see subscriptions.</p>
                 <ul class="legend" id="legendSave" aria-label="Savings legend"></ul>
               </section>
               <section class="face back card" id="faceBack" aria-labelledby="backTitle" inert>
                 <div class="face-head">
                   <h3 id="backTitle">Money going out</h3>
+                  <button type="button" class="btn text" data-action="flip" id="flipToSave">Show savings</button>
                 </div>
                 <div class="chart-box" id="chartSubs"></div>
                 <p class="msg" id="subSaving" style="text-align:center"></p>
@@ -579,6 +598,7 @@
             <button type="button" class="chip" data-action="ask" data-q="faster">How can I reach my goal faster?</button>
             <button type="button" class="chip" data-action="ask" data-q="subs">Which subscription should I cancel?</button>
             <button type="button" class="chip" data-action="ask" data-q="emergency">How's my Emergency Fund?</button>
+            <button type="button" class="chip" data-action="ask" data-q="savings">What should I do with my Savings?</button>
             <button type="button" class="chip" data-action="ask" data-q="challenge">Give me a challenge!</button>
           </div>
           <p class="hint">Friendly guidance only, not financial advice.</p>
@@ -626,6 +646,22 @@
             <button type="button" class="btn text" id="emCancel">Cancel</button>
             <button type="button" class="btn tonal" id="emStart">Start 5-second wait</button>
             <button type="submit" class="btn danger" id="emConfirm" disabled>Confirm withdrawal</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="moveDialog" aria-labelledby="mvTitle">
+        <h3 id="mvTitle">Move money</h3>
+        <form id="moveForm" novalidate>
+          <div class="field"><select id="mv-from"></select><label for="mv-from">From</label></div>
+          <div class="field"><select id="mv-to"></select><label for="mv-to">To</label></div>
+          <p class="warn" id="mvRules" hidden></p>
+          <div class="field"><input type="text" id="mv-amt" data-money inputmode="decimal" autocomplete="off" placeholder="0.00" /><label for="mv-amt">Amount (£)</label></div>
+          <p class="hint" id="mvHint"></p>
+          <p class="err" id="mvErr" role="alert"></p>
+          <div class="dialog-actions">
+            <button type="button" class="btn text" id="mvCancel">Cancel</button>
+            <button type="submit" class="btn">Move money</button>
           </div>
         </form>
       </dialog>
@@ -719,6 +755,7 @@
     ];
     var HEX = /^#[0-9a-f]{6}$/i;
     var MAX_PENCE = 100000000;
+    var SAVINGS_START = 12000;
     var DAY = 86400000;
 
     var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -785,9 +822,10 @@
       return {
         balance: 18000,
         weeklyCosts: 5500,
-        nextColour: 4,
+        nextColour: 5,
         history: [3, 10, 17, 24].map(function (d) { return { date: addDays(-d), amount: 2000 }; }),
         pots: [
+          { id: 'savings', main: true, name: 'Savings', icon: '🏦', balance: SAVINGS_START, goal: null, c: 4, colour: PALETTE[4].hex },
           { id: 'emergency', emergency: true, name: 'Emergency Fund', icon: '🔒', balance: 15000, goal: null, c: 0, colour: PALETTE[0].hex },
           { id: 'holiday', name: 'Holiday Fund', icon: '🌴', balance: 24000, goal: { target: 60000, date: addDays(90) }, created: t - 60 * DAY, c: 1, colour: PALETTE[1].hex },
           { id: 'laptop', name: 'Laptop', icon: '💻', balance: 31000, goal: { target: 60000, date: addDays(120) }, created: t - 30 * DAY, c: 2, colour: PALETTE[2].hex },
@@ -811,6 +849,12 @@
       var o = null;
       try { o = JSON.parse(localStorage.getItem(KEY)); } catch (e) { o = null; }
       if (!valid(o)) o = seed();
+      if (!o.pots.some(function (p) { return p.id === 'savings'; })) {
+        var used = o.pots.map(function (p) { return potColour(p); });
+        var free = PALETTE.filter(function (c) { return used.indexOf(c.hex.toLowerCase()) === -1; })[0] || PALETTE[4];
+        o.pots.unshift({ id: 'savings', main: true, name: 'Savings', icon: '🏦', balance: SAVINGS_START, goal: null, c: 4, colour: free.hex });
+      }
+      o.pots.forEach(function (p) { if (p.id === 'savings') { p.main = true; p.goal = null; } });
       o.pots.forEach(function (p) { p.colour = potColour(p); });
       o.subs.forEach(function (s) {
         var guard = 0;
@@ -822,6 +866,7 @@
     function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
     var ui = { open: null, flipped: false, chat: [] };
 
+    function savings() { return pot('savings'); }
     function pot(id) { return state.pots.filter(function (p) { return p.id === id; })[0]; }
     function total() { return state.pots.reduce(function (a, p) { return a + p.balance; }, 0); }
     function activeSubs() { return state.subs.filter(function (s) { return !s.cancelled; }); }
@@ -843,16 +888,18 @@
       return 'M' + pt(R, a0) + ' A' + R + ' ' + R + ' 0 ' + big + ' 1 ' + pt(R, a1) + ' L' + pt(r, a1) + ' A' + r + ' ' + r + ' 0 ' + big + ' 0 ' + pt(r, a0) + ' Z';
     }
     var donutCount = 0;
-    function Donut(box, label, onFlip) {
+    function Donut(box, label, onFlip, onSelect, goLabel) {
       var self = this;
-      this.box = box; this.uid = 'd' + (++donutCount); this.onFlip = onFlip; this.ids = ''; this.shown = {}; this.items = []; this.touch = false;
+      this.box = box; this.uid = 'd' + (++donutCount); this.onFlip = onFlip; this.onSelect = onSelect; this.goLabel = goLabel; this.ids = ''; this.shown = {}; this.items = [];
       box.innerHTML = '<svg class="donut" viewBox="-110 -110 220 220" role="group" aria-label="' + esc(label) + '">' +
         '<circle class="empty" r="81" fill="none" stroke-width="38"></circle><g class="segs"></g><path class="hl" d=""></path></svg>' +
         '<div class="centre"><span class="small"></span><span class="big"></span></div><div class="tip" hidden></div>';
       this.segs = $('.segs', box); this.hl = $('.hl', box); this.tip = $('.tip', box); this.empty = $('.empty', box);
       box.addEventListener('click', function (e) {
-        if (self.touch && e.target.closest('.seg')) { self.touch = false; return; }
-        self.touch = false; self.onFlip();
+        var sg = e.target.closest('.seg');
+        if (sg) { self.onSelect(sg.getAttribute('data-id')); return; }
+        var rc = box.getBoundingClientRect();
+        if (Math.hypot(e.clientX - (rc.left + rc.width / 2), e.clientY - (rc.top + rc.height / 2)) <= rc.width / 2 * (r / 110)) self.onFlip();
       });
     }
     Donut.prototype.colour = function (it) { return it.colour; };
@@ -872,8 +919,8 @@
           g.addEventListener('mouseleave', function () { self.hide(); });
           g.addEventListener('focus', function () { self.show(it.id); });
           g.addEventListener('blur', function () { self.hide(); });
-          g.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') { self.touch = true; self.show(it.id); } });
-          g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); self.onFlip(); } });
+          g.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') self.show(it.id); });
+          g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); self.onSelect(it.id); } });
           self.segs.appendChild(g);
         });
         if (fid) { var f = this.segs.querySelector('[data-id="' + fid + '"]'); if (f) f.focus(); }
@@ -881,7 +928,7 @@
       this.items = items;
       items.forEach(function (it, i) {
         var g = self.segs.children[i];
-        g.setAttribute('aria-label', it.name + ', ' + fmt(it.value) + ', ' + it.pct + ' percent of total. Press Enter to flip the chart.');
+        g.setAttribute('aria-label', it.name + ', ' + fmt(it.value) + ', ' + it.pct + '%. ' + self.goLabel);
         $('path', g).setAttribute('fill', self.colour(it));
       });
       var from = this.shown, to = {};
@@ -921,8 +968,8 @@
     };
     Donut.prototype.hide = function () { this.active = null; this.hl.setAttribute('d', ''); this.tip.hidden = true; };
 
-    var saveDonut = new Donut($('#chartSave'), 'Savings split by pot', flip);
-    var subsDonut = new Donut($('#chartSubs'), 'Monthly subscriptions split by service', flip);
+    var saveDonut = new Donut($('#chartSave'), 'Savings split by pot', flip, goToPot, 'Go to pot');
+    var subsDonut = new Donut($('#chartSubs'), 'Monthly subscriptions split by service', flip, goToSub, 'Go to subscription');
 
     /* ---------- flip ---------- */
     function flip() {
@@ -931,11 +978,31 @@
       var b = $(ui.flipped ? '#viewSubs' : '#viewSave'); if (b) b.focus({ preventScroll: true });
       say(ui.flipped ? 'Showing monthly expenses' : 'Showing savings');
     }
-    function applyFlip() {
+    var collapseTimer = null;
+    function applyFlip(now) {
       $('#flipInner').classList.toggle('flipped', ui.flipped);
       $('#viewSave').setAttribute('aria-pressed', !ui.flipped); $('#viewSubs').setAttribute('aria-pressed', ui.flipped);
       if (ui.flipped) { $('#faceFront').setAttribute('inert', ''); $('#faceBack').removeAttribute('inert'); }
       else { $('#faceBack').setAttribute('inert', ''); $('#faceFront').removeAttribute('inert'); }
+      /* Only the visible face takes up space, so the section never keeps the taller hidden face's height */
+      var on = $(ui.flipped ? '#faceBack' : '#faceFront'), off = $(ui.flipped ? '#faceFront' : '#faceBack');
+      clearTimeout(collapseTimer); on.classList.remove('collapsed');
+      if (now || reduce.matches) off.classList.add('collapsed');
+      else collapseTimer = setTimeout(function () { off.classList.add('collapsed'); }, 520);
+    }
+    function goToPot(id) {
+      if (!pot(id)) return;
+      ui.open = id; renderPots();
+      var el = $('.pot[data-id="' + id + '"]'), btn = $('#pot-btn-' + id);
+      el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1800);
+      el.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
+      btn.focus({ preventScroll: true });
+      say(pot(id).name + ' opened.');
+    }
+    function goToSub(id) {
+      var b = document.getElementById('cancel-' + id) || document.getElementById('undo-' + id);
+      if (!b) return;
+      b.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'center' }); b.focus({ preventScroll: true });
     }
 
     /* ---------- render ---------- */
@@ -944,7 +1011,8 @@
       saveDonut.update(items, 'Total savings', fmt(total()));
       var tot = total();
       $('#legendSave').innerHTML = state.pots.map(function (p) {
-        return '<li><span class="sw" style="background:' + potColour(p) + '" aria-hidden="true"></span><span aria-hidden="true">' + esc(p.icon) + '</span><span class="nm">' + esc(p.name) + '</span><span>' + fmt(p.balance) + ' · ' + (tot ? Math.round(p.balance / tot * 100) : 0) + '%</span></li>';
+        var pc = tot ? Math.round(p.balance / tot * 100) : 0;
+        return '<li><button type="button" class="legend-row" data-action="goto-pot" data-id="' + p.id + '" aria-label="' + esc(p.name) + ', ' + fmt(p.balance) + ', ' + pc + '%. Go to pot"><span class="sw" style="background:' + potColour(p) + '" aria-hidden="true"></span><span aria-hidden="true">' + esc(p.icon) + '</span><span class="nm">' + esc(p.name) + '</span><span>' + fmt(p.balance) + ' · ' + pc + '%</span></button></li>';
       }).join('');
     }
     function refreshColours() {
@@ -1007,16 +1075,23 @@
       h += '</div><label class="custom-colour' + (preset ? '' : ' selected') + '"><span>Custom colour</span><input type="color" id="colc-' + p.id + '" value="' + cur + '" data-colour-custom="' + p.id + '" /></label>';
       return h + '<p class="support colour-note" id="cnote-' + p.id + '" aria-live="polite">' + esc(colourNote(p)) + '</p></fieldset></div>';
     }
+    function moveControl(p) {
+      var b = function (mode, label, cls) { return '<button type="button" class="btn ' + cls + '" id="' + mode + '-' + p.id + '" data-action="move" data-mode="' + mode + '" data-id="' + p.id + '">' + label + '</button>'; };
+      if (p.main) return '<div class="act"><h4>Move money</h4><p class="hint">Move money from Savings into any pot.</p><div class="btn-row">' + b('mv', 'Move money', 'tonal') + '</div></div>';
+      return '<div class="act"><h4>Move money</h4><p class="hint">Move money between this pot and Savings or your other pots.' + (p.emergency ? ' Sending money out of the Emergency Fund follows the emergency rules.' : '') + '</p><div class="btn-row">' + b('fromsav', 'Add from Savings', 'tonal') + b('tosav', 'Send to Savings', 'tonal') + b('mv', 'Move money', 'outlined') + '</div></div>';
+    }
     function renderPots() {
       var tot = total();
       $('#pots').innerHTML = state.pots.map(function (p) {
         var open = ui.open === p.id, pct = pctOf(p), share = tot ? Math.round(p.balance / tot * 100) : 0, col = potColour(p);
-        var h = '<article class="pot' + (p.emergency ? ' em' : '') + '" data-id="' + p.id + '" style="--pot:' + col + ';--on-pot:' + onColour(col) + '"><h3><button type="button" class="pot-toggle" id="pot-btn-' + p.id + '" data-action="toggle-pot" data-id="' + p.id + '" aria-expanded="' + open + '" aria-controls="pot-body-' + p.id + '"><span class="pot-icon" aria-hidden="true">' + esc(p.icon) + '</span><span class="pot-name">' + esc(p.name) + (p.goal ? ' <small>(' + pct + '%)</small>' : '') + '</span><span class="pot-meta"><span class="pot-share">' + share + '%<span class="sr-only"> of your total savings</span></span><span class="pot-bal">' + fmt(p.balance) + '</span></span><span class="chev" aria-hidden="true">▾</span></button></h3>';
+        var h = '<article class="pot' + (p.emergency ? ' em' : '') + (p.main ? ' main' : '') + '" data-id="' + p.id + '" style="--pot:' + col + ';--on-pot:' + onColour(col) + '"><h3><button type="button" class="pot-toggle" id="pot-btn-' + p.id + '" data-action="toggle-pot" data-id="' + p.id + '" aria-expanded="' + open + '" aria-controls="pot-body-' + p.id + '"><span class="pot-icon" aria-hidden="true">' + esc(p.icon) + '</span><span class="pot-name">' + esc(p.name) + (p.main ? ' <small>Main fund</small>' : p.goal ? ' <small>(' + pct + '%)</small>' : '') + '</span><span class="pot-meta"><span class="pot-share">' + share + '%<span class="sr-only"> of your total savings</span></span><span class="pot-bal">' + fmt(p.balance) + '</span></span><span class="chev" aria-hidden="true">▾</span></button></h3>';
         if (open) {
           h += '<div class="pot-body" id="pot-body-' + p.id + '">';
           if (p.emergency) {
             var weeks = state.weeklyCosts ? Math.floor(p.balance / state.weeklyCosts * 10) / 10 : 0;
-            h += '<p class="warn">⚠️ Emergency only! This is your safety net for real surprises. You can take out up to 25% of the fund (' + fmt(Math.floor(p.balance * 0.25)) + ' right now) each time, and we will ask why and make you wait 5 seconds to be sure.</p><p class="msg">Covers about ' + NUM1.format(weeks) + ' weeks of essentials. Aim for 3+ weeks.</p>';
+            h += '<p class="warn">⚠️ Emergency only! This is your safety net for real surprises. You can take out up to 25% of the fund (' + fmt(Math.floor(p.balance * 0.25)) + ' right now) each time, whether you withdraw it or move it to another pot, and we will ask why and make you wait 5 seconds to be sure. Adding money is always free.</p><p class="msg">Covers about ' + NUM1.format(weeks) + ' weeks of essentials. Aim for 3+ weeks.</p>';
+          } else if (p.main) {
+            h += '<p class="msg">Your main fund for general savings. It has no goal, and it cannot be renamed or deleted.</p><p class="hint">When you delete a pot, its money is returned here.</p>';
           } else if (p.goal) {
             h += '<div><div class="bar" role="progressbar" aria-label="' + esc(p.name) + ' goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div><p class="msg">' + pct + '% complete. ' + esc(msgFor(p, pct)) + '</p><p class="hint">Goal ' + fmt(p.goal.target) + (p.goal.date ? ' by ' + fmtDate(p.goal.date, true) : '') + ' · ' + fmt(Math.max(0, p.goal.target - p.balance)) + ' to go</p></div>';
           } else h += '<p class="hint">No goal yet. Set one below to track your progress 🎯</p>';
@@ -1024,8 +1099,10 @@
           h += '<div class="act"><h4>Add money</h4>' + moneyForm('add', p.id, 'Amount (£)', 'Add', 'Taken from your spending balance.') + '</div>';
           if (p.emergency) h += '<div class="act act-em"><h4>Withdraw money</h4><p class="hint">Emergency only. You will be asked for a reason.</p><button type="button" class="btn tonal danger em-withdraw" id="em-open" data-action="em-open">Withdraw in an emergency</button></div>';
           else h += '<div class="act"><h4>Withdraw money</h4>' + moneyForm('withdraw', p.id, 'Amount (£)', 'Withdraw', 'Goes back to your spending balance.') + '</div>';
+          h += moveControl(p);
           h += colourControl(p);
-          if (p.emergency) h += '<div class="act"><h4>Name and icon</h4><p class="hint">🔒 The Emergency Fund name and icon are locked, so it can never be deleted.</p></div>';
+          if (p.main) h += '<div class="act"><h4>Name and icon</h4><p class="hint">🔒 The Savings name and icon are locked, so this main fund can never be deleted.</p></div>';
+          else if (p.emergency) h += '<div class="act"><h4>Name and icon</h4><p class="hint">🔒 The Emergency Fund name and icon are locked, so it can never be deleted.</p></div>';
           else {
             h += '<div class="act"><h4>Rename pot</h4><form data-form="rename" data-id="' + p.id + '" novalidate><div class="row"><div class="grow field"><input type="text" id="rename-' + p.id + '" maxlength="24" value="' + esc(p.name) + '" autocomplete="off" placeholder=" " /><label for="rename-' + p.id + '">New name</label></div><button type="submit" class="btn">Save</button></div><p class="err" role="alert"></p></form></div>';
             h += '<div class="act"><h4>Change icon</h4><div class="emoji-grid" role="group" aria-label="Pick an icon">' + POT_ICONS.map(function (e) { return '<button type="button" data-action="icon" data-id="' + p.id + '" data-icon="' + e + '" aria-pressed="' + (e === p.icon) + '" aria-label="Icon ' + e + '">' + e + '</button>'; }).join('') + '</div></div>';
@@ -1055,6 +1132,12 @@
         if (w >= 3) out.push({ k: 'good', t: 'Your Emergency Fund covers ' + NUM1.format(Math.floor(w * 10) / 10) + ' weeks of costs, above the 3 week target. Safety net secured! 🛟' });
         else out.push({ k: 'tip', t: 'Your Emergency Fund covers ' + NUM1.format(Math.floor(w * 10) / 10) + ' weeks. Add ' + fmt(need) + ' to reach 3 weeks of cover. 🛟' });
       }
+      var sv = savings(), gl = goals().sort(function (a, b) { return pctOf(b) - pctOf(a); })[0];
+      if (sv && gl && sv.balance >= 500) {
+        var mv = Math.min(sv.balance, gl.goal.target - gl.balance);
+        out.push({ k: 'tip', t: 'You have ' + fmt(sv.balance) + ' sitting in Savings. Moving ' + fmt(mv) + ' into ' + gl.name + ' would get it to ' + Math.min(100, Math.floor((gl.balance + mv) / gl.goal.target * 100)) + '% of its goal. Use Move money! ' + gl.icon });
+      } else if (sv && !gl && sv.balance >= 5000) out.push({ k: 'tip', t: 'You have ' + fmt(sv.balance) + ' in Savings. Set a goal on a pot, then move some Savings into it to start building towards it. 🎯' });
+      else if (sv && sv.balance === 0) out.push({ k: 'tip', t: 'Your Savings fund is empty. Top it up from your spending balance so you always have a cushion. 🐷' });
       state.pots.forEach(function (p) {
         if (!p.goal) return;
         var pc = pctOf(p);
@@ -1079,6 +1162,7 @@
         if (!g) return 'Set a goal on one of your pots first, then I can build a plan with you! 🎯';
         var wf = weeklyFor(g), left = g.goal.target - g.balance, s = 'For ' + g.name + ' you need ' + fmt(left) + ' more. ';
         s += wf && !wf.late ? 'Saving ' + fmt(wf.amt) + ' a week gets you there by ' + fmtDate(g.goal.date) + '. ' : 'Saving £10 a week would take about ' + Math.ceil(left / 1000) + ' weeks. ';
+        if (savings() && savings().balance > 0) s += 'You also have ' + fmt(savings().balance) + ' in Savings you could move into it. ';
         if (un.length) s += 'Cancelling ' + un[0].name + ' frees up ' + fmt(un[0].cost) + ' a month too!';
         return s;
       }
@@ -1086,6 +1170,11 @@
         if (un.length) return un.map(function (s) { return s.name + ' (unused ' + s.unused + ' days, ' + fmt(s.cost) + '/month)'; }).join('; ') + '. Those are the best ones to cancel. ✂️';
         var a = activeSubs().sort(function (x, y) { return y.cost - x.cost; })[0];
         return a ? 'Nothing looks unused. Your biggest one is ' + a.name + ' at ' + fmt(a.cost) + ' a month, so ask if you still love it. 🤔' : 'You have no subscriptions. Wow! 🧹';
+      }
+      if (q === 'savings') {
+        var sv = savings();
+        if (!sv || !sv.balance) return 'Your Savings fund is empty right now. Add some from your spending balance and I can help you plan where it goes. 🐷';
+        return g ? 'You have ' + fmt(sv.balance) + ' in Savings. Moving ' + fmt(Math.min(sv.balance, g.goal.target - g.balance)) + ' into ' + g.name + ' would bring it closer to its goal. Use Move money on the Savings card! 🚀' : 'You have ' + fmt(sv.balance) + ' in Savings. Create a pot with a goal, then move some Savings into it. 🎯';
       }
       if (q === 'emergency') {
         var em = pot('emergency'), w = state.weeklyCosts ? em.balance / state.weeklyCosts : 0;
@@ -1169,15 +1258,22 @@
       }
       if (a === 'pick') { return pick(b); }
       if (a === 'icon' && p) { p.icon = b.getAttribute('data-icon'); save(); render(); return say('Icon changed'); }
-      if (a === 'delete' && p) {
-        return ask({ title: 'Delete ' + p.name + '?', msg: p.balance ? 'The ' + fmt(p.balance) + ' goes back to your spending balance.' : 'It is empty.', ok: 'Yes, delete', no: 'Keep it', back: function () { return $('#del-' + id); },
+      if (a === 'delete' && p && !p.main && !p.emergency) {
+        return ask({ title: 'Delete ' + p.name + '?', msg: p.balance ? 'The ' + fmt(p.balance) + ' will be returned to Savings.' : 'It is empty, so nothing will be returned to Savings.', ok: 'Yes, delete', no: 'Keep it', back: function () { return $('#del-' + id); },
           onOk: function () {
-            state.balance += p.balance; state.pots = state.pots.filter(function (x) { return x !== p; }); ui.open = null;
-            commit(p.name + ' deleted. ' + fmt(p.balance) + ' returned to your spending balance.'); $('#newPotBtn').focus();
+            savings().balance += p.balance; state.pots = state.pots.filter(function (x) { return x !== p; }); ui.open = null;
+            commit(p.name + ' deleted. ' + fmt(p.balance) + ' returned to Savings.'); $('#newPotBtn').focus();
           } });
       }
       if (a === 'rm-goal' && p) { p.goal = null; p.celebrated = false; return commit('Goal removed'); }
-      if (a === 'em-open') return openEm();
+      if (a === 'em-open') return openEm(null, '', b.id);
+      if (a === 'goto-pot') return goToPot(id);
+      if (a === 'move' && p) {
+        var mode = b.getAttribute('data-mode'), other = state.pots.filter(function (x) { return x.id !== 'savings' && x.id !== p.id; })[0];
+        if (mode === 'fromsav') return openMove('savings', p.id, b.id);
+        if (mode === 'tosav') return openMove(p.id, 'savings', b.id);
+        return openMove(p.id, p.main ? (other || p).id : 'savings', b.id);
+      }
       if (a === 'sub-cancel') {
         var s = subById(id);
         return ask({ title: 'Cancel ' + s.name + '?', msg: 'You will save ' + fmt(s.cost) + ' a month.', ok: 'Yes, cancel it', no: 'Keep it', back: function () { return $('#cancel-' + id); },
@@ -1266,7 +1362,7 @@
     });
 
     /* ---------- emergency withdrawal ---------- */
-    var emTimer = null, emReady = false;
+    var emTimer = null, emReady = false, emDest = null, emBack = null;
     var dlg = $('#emDialog');
     function emReset() { clearInterval(emTimer); emReady = false; $('#emConfirm').disabled = true; $('#emStart').disabled = false; $('#emStart').textContent = 'Start 5-second wait'; $('#emStatus').textContent = ''; }
     function emCheck() {
@@ -1276,10 +1372,11 @@
       if (m.pence > max) return { err: 'You can take at most ' + fmt(max) + ' at a time (25% of the fund).', el: $('#em-amt') };
       return { pence: m.pence };
     }
-    function openEm() {
-      var em = pot('emergency');
-      $('#emRules').textContent = 'Emergency only! You can take up to ' + fmt(Math.floor(em.balance * 0.25)) + ' (25% of ' + fmt(em.balance) + ') each time. Tell us why, then wait 5 seconds to make sure.';
-      $('#em-reason').value = ''; $('#em-amt').value = ''; $('#emErr').textContent = ''; emReset();
+    function openEm(dest, amount, back) {
+      var em = pot('emergency'), to = dest && pot(dest);
+      emDest = to ? to.id : null; emBack = back || null;
+      $('#emRules').textContent = 'Emergency only! You can take up to ' + fmt(Math.floor(em.balance * 0.25)) + ' (25% of ' + fmt(em.balance) + ') each time' + (to ? ' when moving money to ' + to.name : '') + '. Tell us why, then wait 5 seconds to make sure.';
+      $('#em-reason').value = ''; $('#em-amt').value = amount || ''; $('#emErr').textContent = ''; emReset();
       dlg.showModal(); $('#em-reason').focus();
     }
     ['#em-reason', '#em-amt'].forEach(function (s) { $(s).addEventListener('input', emReset); });
@@ -1299,11 +1396,51 @@
       if (!emReady) return;
       var c = emCheck(); $('#emErr').textContent = c.err || '';
       if (c.err) return c.el.focus();
-      var em = pot('emergency'); em.balance -= c.pence; state.balance += c.pence;
-      dlg.close(); ui.open = 'emergency'; commit(fmt(c.pence) + ' moved from your Emergency Fund. Take care of yourself!'); $('#pot-btn-emergency').focus();
+      var em = pot('emergency'), to = emDest && pot(emDest);
+      em.balance -= c.pence; if (to) to.balance += c.pence; else state.balance += c.pence;
+      dlg.close(); ui.open = 'emergency'; commit(fmt(c.pence) + ' moved from your Emergency Fund' + (to ? ' to ' + to.name : '') + '. Take care of yourself!'); $('#pot-btn-emergency').focus();
     });
     $('#emCancel').addEventListener('click', function () { dlg.close(); });
-    dlg.addEventListener('close', function () { emReset(); var b = $('#em-open'); if (b) b.focus(); });
+    dlg.addEventListener('close', function () { emReset(); var b = (emBack && document.getElementById(emBack)) || $('#em-open'); if (b) b.focus(); });
+
+    /* ---------- move money between Savings and pots ---------- */
+    var mvDlg = $('#moveDialog'), mvBack = null, mvSkipFocus = false;
+    function mvOptions(sel, skip, chosen) {
+      sel.innerHTML = state.pots.filter(function (p) { return p.id !== skip; }).map(function (p) { return '<option value="' + p.id + '">' + esc(p.icon + ' ' + p.name + ' (' + fmt(p.balance) + ')') + '</option>'; }).join('');
+      sel.value = chosen;
+      if (sel.value !== chosen) sel.selectedIndex = 0;
+    }
+    function mvSync() {
+      var from = pot($('#mv-from').value);
+      mvOptions($('#mv-to'), from.id, $('#mv-to').value);
+      $('#mvHint').textContent = 'Available in ' + from.name + ': ' + fmt(from.balance) + '. Up to 2 decimal places.';
+      $('#mvRules').hidden = !from.emergency;
+      if (from.emergency) $('#mvRules').textContent = 'Money can move out of the Emergency Fund only with a reason, up to ' + fmt(Math.floor(from.balance * 0.25)) + ' (25%) at a time, and after a 5-second wait. Moving money in is always free.';
+    }
+    function openMove(fromId, toId, back) {
+      mvBack = back || null; mvSkipFocus = false;
+      mvOptions($('#mv-from'), null, fromId); mvOptions($('#mv-to'), fromId, toId); mvSync();
+      $('#mv-amt').value = ''; $('#mvErr').textContent = ''; $('#mv-amt').removeAttribute('aria-invalid');
+      mvDlg.showModal(); $('#mv-amt').focus();
+    }
+    $('#mv-from').addEventListener('change', mvSync);
+    $('#mvCancel').addEventListener('click', function () { mvDlg.close(); });
+    mvDlg.addEventListener('close', function () {
+      if (mvSkipFocus) return;
+      var b = (mvBack && document.getElementById(mvBack)) || $('#newPotBtn'); if (b) b.focus();
+    });
+    $('#moveForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var from = pot($('#mv-from').value), to = pot($('#mv-to').value), amt = $('#mv-amt'), m = parseMoney(amt.value), err = '', el = amt;
+      if (!from || !to || from === to) { err = 'Pick two different places to move money between.'; el = $('#mv-to'); }
+      else if (m.err) err = m.err;
+      else if (m.pence > from.balance) err = 'You only have ' + fmt(from.balance) + ' in ' + from.name + '.';
+      else if (from.emergency && m.pence > Math.floor(from.balance * 0.25)) err = 'You can take at most ' + fmt(Math.floor(from.balance * 0.25)) + ' at a time out of the Emergency Fund (25% of the fund).';
+      if (err) { $('#mvErr').textContent = err; amt.setAttribute('aria-invalid', el === amt ? 'true' : 'false'); return el.focus(); }
+      if (from.emergency) { mvSkipFocus = true; mvDlg.close(); return openEm(to.id, amt.value.trim(), mvBack); }
+      from.balance -= m.pence; to.balance += m.pence;
+      mvDlg.close(); commit(fmt(m.pence) + ' moved from ' + from.name + ' to ' + to.name + '.');
+    });
 
     /* ---------- coach panel ---------- */
     var coachBtn = $('#coachBtn'), coachPanel = $('#coachPanel'), coachBackdrop = $('#coachBackdrop');
@@ -1334,7 +1471,7 @@
     /* ---------- init ---------- */
     buildPicker(); setPicker('✨');
     $('#ns-date').value = today();
-    applyFlip();
+    applyFlip(true);
     render();
     reduce.addEventListener && reduce.addEventListener('change', function () {});
     var darkMq = window.matchMedia('(prefers-color-scheme: dark)');
