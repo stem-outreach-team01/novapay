@@ -39,10 +39,10 @@
       --accent:       #6C63FF;
       --accent-light: #EEEEFF;
       --text:         #0D0F1C;
-      --muted:        #A9AFC0;
+      --muted:        #4A5068;
       --border:       #E8ECF2;
-      --debit:        #FF4757;
-      --credit:       #00C896;
+      --debit:        #C41230;
+      --credit:       #00704D;
       --shadow:       0 2px 12px rgba(13,15,28,0.08);
       --r:            16px;
       --r-sm:         10px;
@@ -105,10 +105,10 @@
     .main {
       max-width: 660px;
       margin: 0 auto;
-      padding: 24px 16px;
+      padding: 28px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 28px;
     }
 
     /* ── BALANCE HERO ───────────────────────── */
@@ -139,11 +139,11 @@
     }
 
     .balance-eyebrow {
-      font-size: 0.7em;
+      font-size: 0.8em;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.85);
       margin-bottom: 10px;
       position: relative; z-index: 1;
     }
@@ -153,7 +153,7 @@
       font-weight: 800;
       letter-spacing: -0.04em;
       line-height: 1;
-      color: #0F1340;
+      color: #FFFFFF;
       margin-bottom: 24px;
       font-variant-numeric: tabular-nums;
       position: relative; z-index: 1;
@@ -167,9 +167,9 @@
     }
 
     .account-name {
-      font-size: 0.85em;
+      font-size: 0.9em;
       font-weight: 500;
-      color: rgba(255,255,255,0.65);
+      color: rgba(255,255,255,0.9);
     }
 
     .account-pill {
@@ -180,14 +180,14 @@
       font-size: 0.78em;
       font-weight: 600;
       letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.85);
+      color: #FFFFFF;
     }
 
     /* ── STATS ROW ──────────────────────────── */
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
 
     .stat-card {
@@ -198,7 +198,7 @@
     }
 
     .stat-label {
-      font-size: 0.7em;
+      font-size: 0.78em;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -207,8 +207,8 @@
     }
 
     .stat-value {
-      font-size: 1.2em;
-      font-weight: 700;
+      font-size: 1.4em;
+      font-weight: 800;
       letter-spacing: -0.02em;
       font-variant-numeric: tabular-nums;
     }
@@ -224,11 +224,11 @@
     }
 
     .card-title {
-      font-size: 0.72em;
-      font-weight: 700;
+      font-size: 0.9em;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
+      color: var(--text);
       margin-bottom: 16px;
     }
 
@@ -254,7 +254,7 @@
     .tx-meta { flex: 1; min-width: 0; }
 
     .tx-name {
-      font-size: 0.92em;
+      font-size: 1em;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
@@ -263,14 +263,14 @@
 
     /* MAKEOVER? Is this date easy to read? */
     .tx-date {
-      font-size: 0.65em;
+      font-size: 0.8em;
       color: var(--muted);
       margin-top: 3px;
     }
 
     .tx-amount {
-      font-size: 0.92em;
-      font-weight: 700;
+      font-size: 1em;
+      font-weight: 800;
       font-variant-numeric: tabular-nums;
       flex-shrink: 0;
     }
@@ -282,7 +282,7 @@
 
     .field-label {
       display: block;
-      font-size: 0.72em;
+      font-size: 0.8em;
       font-weight: 700;
       letter-spacing: 0.07em;
       text-transform: uppercase;
@@ -332,7 +332,7 @@
 
     .btn-ghost {
       background: var(--accent-light);
-      color: var(--accent);
+      color: #4B43C8;
     }
 
     /* ── ALERTS ─────────────────────────────── */
@@ -340,12 +340,12 @@
       margin-top: 12px;
       padding: 12px 16px;
       border-radius: var(--r-sm);
-      font-size: 0.88em;
-      font-weight: 500;
+      font-size: 0.92em;
+      font-weight: 600;
       display: none;
     }
-    .alert-ok  { background: #E6FAF3; color: #00804E; border: 1px solid #B0EDCF; }
-    .alert-err { background: #FFF0F1; color: #BF1030; border: 1px solid #FFB8C1; }
+    .alert-ok  { background: #E6FAF3; color: #00603B; border: 1px solid #B0EDCF; }
+    .alert-err { background: #FFF0F1; color: #A30D27; border: 1px solid #FFB8C1; }
 
     /* ── INTEREST RESULT ────────────────────── */
     .result-box {
@@ -356,17 +356,17 @@
       display: none;
     }
     .result-eyebrow {
-      font-size: 0.68em;
+      font-size: 0.78em;
       font-weight: 700;
       letter-spacing: 0.09em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: #4B43C8;
       margin-bottom: 5px;
     }
     .result-figure {
-      font-size: 1.8em;
+      font-size: 2em;
       font-weight: 800;
-      color: var(--accent);
+      color: #4B43C8;
       letter-spacing: -0.03em;
       font-variant-numeric: tabular-nums;
     }
