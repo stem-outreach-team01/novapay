@@ -173,6 +173,129 @@
       .panel { padding: 16px; }
       .placeholder { min-height: 320px; }
     }
+
+    /* ===== Savings feature ===== */
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .feat { display: grid; gap: 22px; }
+    .feat h2, .feat h3, .feat h4 { color: #000; margin: 0; }
+    .feat-head { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; }
+    .feat-head h2 { font-size: 1.6rem; }
+    .feat-head p { color: var(--muted); }
+    .head-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .balance-pill { background: var(--tint); color: #2b2490; font-weight: 700; padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(90,80,224,.25); }
+    .top-grid { display: grid; gap: 22px; grid-template-columns: 1fr; }
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 18px; padding: 18px; box-shadow: 0 4px 14px rgba(26,29,41,.05); }
+    .feat button, .feat input, .feat select, .feat textarea { font: inherit; }
+    .btn { cursor: pointer; border: 2px solid var(--accent); background: var(--accent); color: #fff; font-weight: 700; padding: 9px 16px; border-radius: 999px; min-height: 44px; transition: transform .15s, background .15s; }
+    .btn:hover { transform: translateY(-1px); background: #4338ca; }
+    .btn.ghost { background: #fff; color: #3b33b5; }
+    .btn.ghost:hover { background: var(--tint); }
+    .btn.danger { background: #b91c1c; border-color: #b91c1c; }
+    .btn.danger.ghost { background: #fff; color: #991b1b; }
+    .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+    .feat :focus-visible, dialog :focus-visible { outline: 3px solid #1a1d29; outline-offset: 2px; box-shadow: 0 0 0 5px #fff; }
+    .feat input[type=text], .feat input[type=date], .feat select { border: 2px solid #6b7280; border-radius: 12px; padding: 9px 12px; min-height: 44px; background: #fff; color: var(--ink); width: 100%; }
+    .feat input[aria-invalid=true] { border-color: #b91c1c; }
+    .feat label { font-weight: 600; color: var(--ink); font-size: .92rem; display: block; margin-bottom: 4px; }
+    .err { color: #b91c1c; font-weight: 600; font-size: .9rem; min-height: 1.2em; margin-top: 4px; }
+    .hint { color: var(--muted); font-size: .9rem; }
+
+    .flip { perspective: 1400px; }
+    .flip-inner { display: grid; transition: transform .8s cubic-bezier(.2,.8,.2,1); transform-style: preserve-3d; }
+    .flip-inner.flipped { transform: rotateY(180deg); }
+    .face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .face.back { transform: rotateY(180deg); }
+    .face-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    @media (prefers-reduced-motion: reduce) {
+      .flip-inner, .flip-inner.flipped { transform: none; transition: none; }
+      .face { transition: opacity .4s; }
+      .face.back, .flip-inner.flipped .face.back { transform: none; opacity: 0; }
+      .flip-inner.flipped .face.back { opacity: 1; }
+      .flip-inner.flipped .face.front { opacity: 0; }
+      .face[inert] { pointer-events: none; }
+      .pot-body { animation: none !important; }
+    }
+
+    .chart-box { position: relative; width: min(100%, 340px); margin: 6px auto; cursor: pointer; }
+    .donut { width: 100%; height: auto; display: block; overflow: visible; }
+    .seg { cursor: pointer; outline: none; }
+    .seg path { stroke: #fff; stroke-width: 2; }
+    .hl { fill: none; stroke: #000; stroke-width: 4; pointer-events: none; }
+    .centre { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
+    .centre .small { font-size: .8rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .centre .big { font-size: clamp(1.3rem, 5vw, 1.8rem); font-weight: 800; color: #000; }
+    .tip { position: absolute; z-index: 5; transform: translate(-50%, -115%); background: #1a1d29; color: #fff; padding: 8px 12px; border-radius: 12px; font-size: .9rem; white-space: nowrap; pointer-events: none; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .tip[hidden] { display: none; }
+    .legend { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
+    .legend li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 12px; background: #f8f9fd; }
+    .legend .nm { flex: 1; font-weight: 600; color: var(--ink); }
+
+    .pots { display: grid; gap: 16px; margin-top: 12px; }
+    .pot { background: #fff; border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: 0 4px 14px rgba(26,29,41,.05); }
+    .pot.em { border: 2px solid #1a1d29; background: #fffdf5; }
+    .pot h3 { margin: 0; font-size: 1.05rem; }
+    .pot-toggle { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 16px; cursor: pointer; color: #000; font-weight: 700; }
+    .pot-toggle:hover { background: #f8f9fd; }
+    .pot-toggle:focus-visible { outline: 3px solid #1a1d29; outline-offset: -3px; }
+    .pot-icon { font-size: 1.7rem; }
+    .pot-name { flex: 1; }
+    .pot-bal { font-weight: 800; }
+    .chev { transition: transform .2s; }
+    .pot-toggle[aria-expanded=true] .chev { transform: rotate(180deg); }
+    .pot-body { padding: 4px 16px 18px; display: grid; gap: 16px; animation: fadeIn .3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    .bar { height: 14px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+    .bar > span { display: block; height: 100%; background: linear-gradient(90deg, #15803d, #0f766e); border-radius: 999px; transition: width .6s; }
+    .msg { font-weight: 700; color: var(--ink); }
+    .actions { display: grid; gap: 14px; grid-template-columns: 1fr; }
+    .act { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: #fafbff; }
+    .act h4 { font-size: .95rem; margin-bottom: 8px; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+    .row > .grow { flex: 1 1 140px; }
+    .emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; }
+    .emoji-grid button { min-height: 44px; font-size: 1.4rem; border: 2px solid var(--border); background: #fff; border-radius: 12px; cursor: pointer; }
+    .emoji-grid button[aria-pressed=true] { border-color: #000; background: var(--tint); }
+    .warn { background: #fff7d6; border: 2px solid #92400e; color: #451a03; border-radius: 12px; padding: 10px 12px; font-weight: 600; }
+    .confirm { background: #fef2f2; border: 2px solid #b91c1c; border-radius: 12px; padding: 10px 12px; color: #450a0a; }
+    .add-pot { margin-top: 4px; }
+
+    .subs { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+    .sub { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px; background: #fafbff; }
+    .sub.cancelled { background: #ecfdf5; border-color: #047857; }
+    .sub .ic { font-size: 1.6rem; }
+    .sub .info { flex: 1 1 160px; }
+    .sub .info strong { color: #000; }
+    .sub.cancelled .info strong { text-decoration: line-through; }
+    .sub .meta { color: var(--muted); font-size: .9rem; display: block; }
+    .sub.cancelled .meta { color: #065f46; font-weight: 700; }
+    .sub .confirm { flex-basis: 100%; }
+
+    .coach .log { display: grid; gap: 10px; max-height: 460px; overflow-y: auto; padding: 4px; }
+    .bubble-row { display: flex; gap: 10px; align-items: flex-start; }
+    .bubble-row.me { justify-content: flex-end; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; font-size: 1.4rem; flex: none; border: 2px solid var(--accent); }
+    .bubble { background: #f1f2fb; border-radius: 4px 16px 16px 16px; padding: 10px 14px; color: var(--ink); max-width: 100%; }
+    .bubble.good { background: #e7f8ee; border-left: 4px solid #15803d; }
+    .bubble.tip-b { background: #fff7e6; border-left: 4px solid #b45309; }
+    .bubble.mine { background: var(--accent); color: #fff; border-radius: 16px 4px 16px 16px; }
+    .quick { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .quick .btn { font-size: .88rem; padding: 6px 12px; min-height: 40px; }
+
+    dialog { border: 0; border-radius: 20px; padding: 22px; max-width: min(460px, 92vw); box-shadow: 0 30px 80px rgba(0,0,0,.35); color: var(--text); }
+    dialog::backdrop { background: rgba(26,29,41,.6); }
+    dialog h3 { color: #000; margin-bottom: 8px; }
+    dialog form { display: grid; gap: 12px; }
+    dialog input[type=text] { border: 2px solid #6b7280; border-radius: 12px; padding: 9px 12px; min-height: 44px; width: 100%; font: inherit; }
+
+    .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 50; }
+    .confetti i { position: absolute; top: -20px; width: 10px; height: 14px; animation: fall 2.4s ease-in forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .8; } }
+
+    @media (min-width: 900px) {
+      .top-grid { grid-template-columns: 1.1fr .9fr; align-items: start; }
+      .actions { grid-template-columns: 1fr 1fr; }
+      .pots { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -200,29 +323,658 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="placeholder">
-        <div class="placeholder-inner">
-          <h2>Insert your NovaPay feature here</h2>
-          <p>
-            Add a page title, layout, components, interactions, and whatever the students invent.
-            This file stays intentionally empty so the team can create their own experience without
-            having to delete any starter content first.
-          </p>
-          <div class="chips" aria-label="starter ideas">
-            <span class="chip">Dashboard</span>
-            <span class="chip">Savings tool</span>
-            <span class="chip">Payment flow</span>
-            <span class="chip">Support screen</span>
-            <span class="chip">Anything else</span>
+    <section class="panel" aria-labelledby="feat-title">
+      <!-- insert novapay feature here -->
+      <div class="feat" id="app">
+        <header class="feat-head">
+          <div>
+            <h2 id="feat-title">Your savings, made simple 🐷</h2>
+            <p>Tap the chart to flip it and see what's going out each month.</p>
           </div>
-          <p class="footer-note">
-            Tip: pair this page with a persona prompt so Copilot can review the work from a real
-            user’s point of view.
-          </p>
+          <div class="head-right">
+            <span class="balance-pill" id="mainBal"></span>
+            <button type="button" class="btn ghost" data-action="reset" id="resetBtn">Reset demo data</button>
+          </div>
+        </header>
+        <div id="resetConfirm" class="confirm" hidden>
+          <p>Reset everything back to the demo data?</p>
+          <div class="row"><button type="button" class="btn danger" data-action="reset-yes">Yes, reset</button> <button type="button" class="btn ghost" data-action="reset-no">Keep my data</button></div>
         </div>
+        <div class="sr-only" id="live" aria-live="polite" role="status"></div>
+
+        <div class="top-grid">
+          <div class="flip">
+            <div class="flip-inner" id="flipInner">
+              <section class="face front card" id="faceFront" aria-labelledby="frontTitle">
+                <div class="face-head">
+                  <h3 id="frontTitle">Savings summary</h3>
+                  <button type="button" class="btn ghost" data-action="flip" id="flipBtnFront" aria-label="Flip chart to see monthly expenses">See expenses ↻</button>
+                </div>
+                <div class="chart-box" id="chartSave"></div>
+                <p class="hint" style="text-align:center">Hover, tap or tab to a slice to see its amount. Press Enter to flip.</p>
+                <ul class="legend" id="legendSave" aria-label="Savings legend"></ul>
+              </section>
+              <section class="face back card" id="faceBack" aria-labelledby="backTitle" inert>
+                <div class="face-head">
+                  <h3 id="backTitle">Money going out 💸</h3>
+                  <button type="button" class="btn ghost" data-action="flip" id="flipBtnBack" aria-label="Flip chart back to savings">Back to savings ↻</button>
+                </div>
+                <div class="chart-box" id="chartSubs"></div>
+                <p class="msg" id="subSaving" style="text-align:center"></p>
+                <ul class="subs" id="subList" aria-label="Subscriptions"></ul>
+                <details class="act" style="margin-top:12px">
+                  <summary><strong>＋ Add a subscription</strong></summary>
+                  <form data-form="newsub" novalidate style="display:grid;gap:10px;margin-top:10px">
+                    <div><label for="ns-name">Name</label><input type="text" id="ns-name" maxlength="24" autocomplete="off" /></div>
+                    <div><label for="ns-icon">Type</label>
+                      <select id="ns-icon"><option value="🎵">🎵 Music</option><option value="🎬">🎬 Video</option><option value="🏋️">🏋️ Fitness</option><option value="📱">📱 Phone</option><option value="🎮">🎮 Gaming</option><option value="📦">📦 Other</option></select></div>
+                    <div><label for="ns-cost">Monthly cost (£)</label><input type="text" id="ns-cost" data-money inputmode="decimal" autocomplete="off" placeholder="e.g. 9.99" /></div>
+                    <div><label for="ns-date">Next billing date</label><input type="date" id="ns-date" /></div>
+                    <p class="err" role="alert"></p>
+                    <button type="submit" class="btn">Add subscription</button>
+                  </form>
+                </details>
+              </section>
+            </div>
+          </div>
+
+          <aside class="card coach" aria-labelledby="coachTitle">
+            <h3 id="coachTitle">Savings Coach</h3>
+            <div class="log" id="coachLog" aria-live="polite" aria-label="Coach messages"></div>
+            <div class="quick" id="quick" role="group" aria-label="Quick questions">
+              <button type="button" class="btn ghost" data-action="ask" data-q="faster">How can I reach my goal faster?</button>
+              <button type="button" class="btn ghost" data-action="ask" data-q="subs">Which subscription should I cancel?</button>
+              <button type="button" class="btn ghost" data-action="ask" data-q="emergency">How's my Emergency Fund?</button>
+              <button type="button" class="btn ghost" data-action="ask" data-q="challenge">Give me a challenge!</button>
+            </div>
+            <p class="hint">Friendly guidance only, not financial advice.</p>
+          </aside>
+        </div>
+
+        <section aria-labelledby="potsTitle">
+          <h3 id="potsTitle">Your savings pots</h3>
+          <div class="pots" id="pots"></div>
+          <div class="add-pot">
+            <button type="button" class="btn" data-action="toggle-newpot" id="newPotBtn" aria-expanded="false" aria-controls="newPotForm">＋ Add new pot</button>
+            <form class="card" id="newPotForm" data-form="newpot" novalidate style="margin-top:12px;display:none;gap:12px">
+              <h4>Create a pot</h4>
+              <div><label for="np-tpl">Goal template</label>
+                <select id="np-tpl">
+                  <option value="present">Present 🎁</option><option value="holiday">Holiday 🌴</option><option value="car">Car 🚗</option><option value="laptop">Laptop 💻</option><option value="custom" selected>Custom ✨</option>
+                </select></div>
+              <div><label for="np-name">Pot name</label><input type="text" id="np-name" maxlength="24" autocomplete="off" /></div>
+              <div><span class="hint" id="np-icon-l">Pick an icon</span>
+                <div class="emoji-grid" id="np-icons" role="group" aria-labelledby="np-icon-l" data-picker data-target="np-icon"></div>
+                <input type="hidden" id="np-icon" value="✨" /></div>
+              <div class="row">
+                <div class="grow"><label for="np-target">Goal amount (£, optional)</label><input type="text" id="np-target" data-money inputmode="decimal" autocomplete="off" /></div>
+                <div class="grow"><label for="np-date">Target date (optional)</label><input type="date" id="np-date" /></div>
+              </div>
+              <p class="err" role="alert"></p>
+              <button type="submit" class="btn">Create pot</button>
+            </form>
+          </div>
+        </section>
       </div>
+
+      <dialog id="emDialog" aria-labelledby="emTitle">
+        <h3 id="emTitle">🛟 Emergency Fund withdrawal</h3>
+        <form id="emForm" novalidate>
+          <p class="warn" id="emRules"></p>
+          <div><label for="em-reason">Why do you need it?</label><input type="text" id="em-reason" maxlength="120" autocomplete="off" /></div>
+          <div><label for="em-amt">Amount (£)</label><input type="text" id="em-amt" data-money inputmode="decimal" autocomplete="off" /></div>
+          <p class="err" id="emErr" role="alert"></p>
+          <p class="hint" id="emStatus" aria-live="polite"></p>
+          <div class="row">
+            <button type="button" class="btn ghost" id="emStart">Start 5-second wait</button>
+            <button type="submit" class="btn danger" id="emConfirm" disabled>Confirm withdrawal</button>
+            <button type="button" class="btn ghost" id="emCancel">Cancel</button>
+          </div>
+        </form>
+      </dialog>
     </section>
   </main>
+  <script>
+  (function () {
+    'use strict';
+    var KEY = 'novapay-savings-v1';
+    var GBP = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+    var NUM1 = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 });
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var POT_ICONS = ['🌴','🎁','🚗','💻','🏠','📱','🎓','🎮','👟','🎸','🐶','✈️','🍕','📚','🎧','🚲','💍','⚽','🎨','🧳','🐷','⭐','💰','🛍️'];
+    var TEMPLATES = {
+      present: { icon: '🎁', name: 'Present', target: '50' },
+      holiday: { icon: '🌴', name: 'Holiday', target: '500' },
+      car: { icon: '🚗', name: 'Car', target: '2000' },
+      laptop: { icon: '💻', name: 'Laptop', target: '600' },
+      custom: { icon: '✨', name: '', target: '' }
+    };
+    var COLOURS = ['#5a50e0', '#0f766e', '#b45309', '#be185d', '#1d4ed8', '#6d28d9', '#15803d', '#b91c1c'];
+    var MAX_PENCE = 100000000;
+    var DAY = 86400000;
+
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var fmt = function (p) { return GBP.format(p / 100); };
+    var uid = function () { return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); };
+
+    /* ---------- dates ---------- */
+    function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    function parseISO(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+    function addDays(n) { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return iso(d); }
+    function fmtDate(s, year) { return new Intl.DateTimeFormat('en-GB', year ? { day: 'numeric', month: 'short', year: 'numeric' } : { day: 'numeric', month: 'short' }).format(parseISO(s)); }
+    function today() { return addDays(0); }
+
+    /* ---------- money parsing ---------- */
+    function parseMoney(str) {
+      var s = String(str).trim();
+      if (!s) return { err: 'Pop an amount in first 🙂' };
+      var m = /^(\d+)(?:\.(\d{1,2}))?$/.exec(s);
+      if (!m) return { err: 'Numbers only please, with up to 2 decimal places (like 12.50).' };
+      var pence = parseInt(m[1], 10) * 100 + (m[2] ? parseInt((m[2] + '0').slice(0, 2), 10) : 0);
+      if (pence <= 0) return { err: 'The amount must be more than £0.00.' };
+      if (pence > MAX_PENCE) return { err: 'That is a big number! Keep it under £1,000,000.' };
+      return { pence: pence };
+    }
+    function sanitizeMoney(v) {
+      v = v.replace(/[^\d.]/g, '');
+      var i = v.indexOf('.');
+      if (i !== -1) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, '').slice(0, 2);
+      return v;
+    }
+    function toInput(p) { return (Math.floor(p / 100)) + (p % 100 ? '.' + String(p % 100).padStart(2, '0') : ''); }
+
+    /* ---------- state ---------- */
+    function seed() {
+      var t = Date.now();
+      return {
+        balance: 18000,
+        weeklyCosts: 5500,
+        nextColour: 4,
+        history: [3, 10, 17, 24].map(function (d) { return { date: addDays(-d), amount: 2000 }; }),
+        pots: [
+          { id: 'emergency', emergency: true, name: 'Emergency Fund', icon: '🔒', balance: 15000, goal: null, c: 0 },
+          { id: 'holiday', name: 'Holiday Fund', icon: '🌴', balance: 24000, goal: { target: 60000, date: addDays(90) }, created: t - 60 * DAY, c: 1 },
+          { id: 'laptop', name: 'Laptop', icon: '💻', balance: 31000, goal: { target: 60000, date: addDays(120) }, created: t - 30 * DAY, c: 2 },
+          { id: 'present', name: 'Birthday Present', icon: '🎁', balance: 1800, goal: { target: 4000, date: addDays(21) }, created: t - 35 * DAY, c: 3 }
+        ],
+        subs: [
+          { id: 's1', name: 'Spotify', icon: '🎵', cost: 1099, next: addDays(5), cancelled: false, unused: 0, c: 0 },
+          { id: 's2', name: 'Netflix', icon: '🎬', cost: 1099, next: addDays(12), cancelled: false, unused: 3, c: 1 },
+          { id: 's3', name: 'Gym', icon: '🏋️', cost: 2499, next: addDays(18), cancelled: false, unused: 45, c: 2 },
+          { id: 's4', name: 'Phone plan', icon: '📱', cost: 1200, next: addDays(9), cancelled: false, unused: 0, c: 3 }
+        ]
+      };
+    }
+    function valid(o) {
+      return o && Array.isArray(o.pots) && Array.isArray(o.subs) && Array.isArray(o.history) && Number.isInteger(o.balance) &&
+        o.pots.some(function (p) { return p.emergency; }) &&
+        o.pots.every(function (p) { return p && typeof p.name === 'string' && Number.isInteger(p.balance); }) &&
+        o.subs.every(function (s) { return s && typeof s.name === 'string' && Number.isInteger(s.cost) && typeof s.next === 'string'; });
+    }
+    function load() {
+      var o = null;
+      try { o = JSON.parse(localStorage.getItem(KEY)); } catch (e) { o = null; }
+      if (!valid(o)) o = seed();
+      o.subs.forEach(function (s) {
+        var guard = 0;
+        while (s.next < today() && guard++ < 60) { var d = parseISO(s.next); d.setMonth(d.getMonth() + 1); s.next = iso(d); }
+      });
+      return o;
+    }
+    var state = load();
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } }
+    var ui = { open: null, confirm: null, confirmSub: null, flipped: false, chat: [] };
+
+    function pot(id) { return state.pots.filter(function (p) { return p.id === id; })[0]; }
+    function total() { return state.pots.reduce(function (a, p) { return a + p.balance; }, 0); }
+    function activeSubs() { return state.subs.filter(function (s) { return !s.cancelled; }); }
+    function monthly() { return activeSubs().reduce(function (a, s) { return a + s.cost; }, 0); }
+    function saved() { return state.subs.filter(function (s) { return s.cancelled; }).reduce(function (a, s) { return a + s.cost; }, 0); }
+    function say(msg) { var l = $('#live'); l.textContent = ''; setTimeout(function () { l.textContent = msg; }, 30); }
+    function pctOf(p) { return p.goal ? Math.min(100, Math.floor(p.balance / p.goal.target * 100)) : 0; }
+
+    /* ---------- donut ---------- */
+    var R = 100, r = 62;
+    function pt(rad, a) { return (rad * Math.sin(a)).toFixed(2) + ' ' + (-rad * Math.cos(a)).toFixed(2); }
+    function arc(a0, a1) {
+      if (a1 - a0 >= Math.PI * 2) a1 = a0 + Math.PI * 2 - 0.001;
+      var big = a1 - a0 > Math.PI ? 1 : 0;
+      return 'M' + pt(R, a0) + ' A' + R + ' ' + R + ' 0 ' + big + ' 1 ' + pt(R, a1) + ' L' + pt(r, a1) + ' A' + r + ' ' + r + ' 0 ' + big + ' 0 ' + pt(r, a0) + ' Z';
+    }
+    var donutCount = 0;
+    function Donut(box, label, onFlip) {
+      var self = this;
+      this.box = box; this.uid = 'd' + (++donutCount); this.onFlip = onFlip; this.ids = ''; this.shown = {}; this.items = []; this.touch = false;
+      var defs = '';
+      for (var i = 0; i < 8; i++) defs += patDef(this.uid + '-' + i, COLOURS[i], i % 4);
+      defs += patDef(this.uid + '-em', '#1a1d29', 'em');
+      box.innerHTML = '<svg class="donut" viewBox="-110 -110 220 220" role="group" aria-label="' + esc(label) + '"><defs>' + defs + '</defs>' +
+        '<circle class="empty" r="81" fill="none" stroke="#d1d5db" stroke-width="38"></circle><g class="segs"></g><path class="hl" d=""></path></svg>' +
+        '<div class="centre"><span class="small"></span><span class="big"></span></div><div class="tip" hidden></div>';
+      this.segs = $('.segs', box); this.hl = $('.hl', box); this.tip = $('.tip', box); this.empty = $('.empty', box);
+      box.addEventListener('click', function (e) {
+        if (self.touch && e.target.closest('.seg')) { self.touch = false; return; }
+        self.touch = false; self.onFlip();
+      });
+    }
+    function patDef(id, col, kind) {
+      var o = '';
+      if (kind === 0) o = '<path d="M0 8L8 0" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>';
+      if (kind === 1) o = '<circle cx="4" cy="4" r="1.6" fill="#fff" fill-opacity=".7"/>';
+      if (kind === 2) o = '<path d="M0 4H8M4 0V8" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/>';
+      if (kind === 'em') o = '<path d="M0 0L8 8M8 0L0 8" stroke="#fbbf24" stroke-width="1.6"/>';
+      return '<pattern id="pat-' + id + '" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="' + col + '"/>' + o + '</pattern>';
+    }
+    Donut.prototype.patId = function (it) { return 'pat-' + this.uid + '-' + (it.locked ? 'em' : (it.c % 8)); };
+    Donut.prototype.update = function (items, small, big) {
+      var self = this, ids = items.map(function (i) { return i.id; }).join('|');
+      $('.small', this.box).textContent = small; $('.big', this.box).textContent = big;
+      var sum = items.reduce(function (a, i) { return a + i.value; }, 0);
+      items.forEach(function (it) { it.pct = sum ? Math.round(it.value / sum * 100) : 0; });
+      if (ids !== this.ids) {
+        var ae = document.activeElement, fid = ae && ae.closest && ae.closest('.seg') && ae.closest('.seg').getAttribute('data-id');
+        this.ids = ids; this.segs.innerHTML = '';
+        items.forEach(function (it) {
+          var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          g.setAttribute('class', 'seg'); g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button'); g.setAttribute('data-id', it.id);
+          g.innerHTML = '<path fill="url(#' + self.patId(it) + ')"></path><circle r="11" fill="#fff" fill-opacity=".9"></circle><text text-anchor="middle" dominant-baseline="central" font-size="14" aria-hidden="true"></text>';
+          g.addEventListener('mouseenter', function () { self.show(it.id); });
+          g.addEventListener('mouseleave', function () { self.hide(); });
+          g.addEventListener('focus', function () { self.show(it.id); });
+          g.addEventListener('blur', function () { self.hide(); });
+          g.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') { self.touch = true; self.show(it.id); } });
+          g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); self.onFlip(); } });
+          self.segs.appendChild(g);
+        });
+        if (fid) { var f = this.segs.querySelector('[data-id="' + fid + '"]'); if (f) f.focus(); }
+      }
+      this.items = items;
+      items.forEach(function (it, i) {
+        var g = self.segs.children[i];
+        g.setAttribute('aria-label', it.name + ', ' + fmt(it.value) + ', ' + it.pct + ' percent of total. Press Enter to flip the chart.');
+        $('text', g).textContent = it.icon;
+      });
+      var from = this.shown, to = {};
+      items.forEach(function (it) { to[it.id] = it.value; });
+      cancelAnimationFrame(this.raf);
+      if (reduce.matches) { this.shown = to; this.draw(); return; }
+      var t0 = performance.now();
+      (function step(now) {
+        var t = Math.min(1, (now - t0) / 600), e = 1 - Math.pow(1 - t, 3), cur = {};
+        items.forEach(function (it) { var a = from[it.id] || 0; cur[it.id] = a + (it.value - a) * e; });
+        self.shown = cur; self.draw();
+        if (t < 1) self.raf = requestAnimationFrame(step); else { self.shown = to; self.draw(); }
+      })(t0);
+    };
+    Donut.prototype.draw = function () {
+      var self = this, sum = 0, a = 0;
+      this.items.forEach(function (it) { sum += self.shown[it.id] || 0; });
+      this.empty.style.display = this.items.length > 0 && sum > 0 ? 'none' : '';
+      this.mid = {};
+      this.items.forEach(function (it, i) {
+        var g = self.segs.children[i], v = self.shown[it.id] || 0, span = sum ? v / sum * Math.PI * 2 : 0;
+        var p = $('path', g), c = $('circle', g), t = $('text', g);
+        p.setAttribute('d', span > 0.001 ? arc(a, a + span) : '');
+        var mid = a + span / 2, show = span > 0.35;
+        var xy = pt(81, mid).split(' ');
+        c.setAttribute('cx', xy[0]); c.setAttribute('cy', xy[1]); t.setAttribute('x', xy[0]); t.setAttribute('y', xy[1]);
+        c.style.display = t.style.display = show ? '' : 'none';
+        self.mid[it.id] = mid; a += span;
+        if (self.active === it.id) self.hl.setAttribute('d', p.getAttribute('d'));
+      });
+    };
+    Donut.prototype.show = function (id) {
+      var it = this.items.filter(function (x) { return x.id === id; })[0];
+      if (!it) return;
+      this.active = id; this.draw();
+      var m = this.mid[id] || 0, x = 50 + (90 * Math.sin(m)) / 2.2 * 1, y = 50 - (90 * Math.cos(m)) / 2.2;
+      this.tip.hidden = false;
+      this.tip.style.left = x + '%'; this.tip.style.top = y + '%';
+      this.tip.textContent = it.icon + ' ' + it.name + ': ' + fmt(it.value) + ' (' + it.pct + '%)';
+    };
+    Donut.prototype.hide = function () { this.active = null; this.hl.setAttribute('d', ''); this.tip.hidden = true; };
+
+    var saveDonut = new Donut($('#chartSave'), 'Savings split by pot', flip);
+    var subsDonut = new Donut($('#chartSubs'), 'Monthly subscriptions split by service', flip);
+
+    /* ---------- flip ---------- */
+    function flip() {
+      ui.flipped = !ui.flipped;
+      applyFlip();
+      var b = $(ui.flipped ? '#flipBtnBack' : '#flipBtnFront'); if (b) b.focus({ preventScroll: true });
+      say(ui.flipped ? 'Showing monthly expenses' : 'Showing savings');
+    }
+    function applyFlip() {
+      $('#flipInner').classList.toggle('flipped', ui.flipped);
+      if (ui.flipped) { $('#faceFront').setAttribute('inert', ''); $('#faceBack').removeAttribute('inert'); }
+      else { $('#faceBack').setAttribute('inert', ''); $('#faceFront').removeAttribute('inert'); }
+    }
+
+    /* ---------- render ---------- */
+    function render() {
+      var ae = document.activeElement, fid = ae && ae.id;
+      $('#mainBal').textContent = 'Spending balance: ' + fmt(state.balance);
+      var items = state.pots.map(function (p) { return { id: p.id, name: p.name, icon: p.icon, value: p.balance, c: p.c || 0, locked: !!p.emergency }; }).filter(function (i) { return i.value > 0; });
+      saveDonut.update(items, 'Total savings', fmt(total()));
+      var tot = total();
+      $('#legendSave').innerHTML = state.pots.map(function (p) {
+        var sw = '<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="5" fill="url(#' + saveDonut.patId({ c: p.c || 0, locked: p.emergency }) + ')" stroke="#1a1d29" stroke-opacity=".4"/></svg>';
+        return '<li>' + sw + '<span aria-hidden="true">' + esc(p.icon) + '</span><span class="nm">' + esc(p.name) + '</span><span>' + fmt(p.balance) + ' · ' + (tot ? Math.round(p.balance / tot * 100) : 0) + '%</span></li>';
+      }).join('');
+      var sitems = activeSubs().map(function (s) { return { id: s.id, name: s.name, icon: s.icon, value: s.cost, c: s.c || 0 }; });
+      subsDonut.update(sitems, 'Per month', fmt(monthly()));
+      $('#subSaving').textContent = saved() ? 'By cancelling you are saving ' + fmt(saved()) + ' a month 🎉' : '';
+      renderSubs(); renderPots(); renderCoach();
+      if (fid) { var el = document.getElementById(fid); if (el) el.focus({ preventScroll: true }); }
+    }
+
+    function renderSubs() {
+      $('#subList').innerHTML = state.subs.map(function (s) {
+        var h = '<li class="sub' + (s.cancelled ? ' cancelled' : '') + '"><span class="ic" aria-hidden="true">' + esc(s.icon) + '</span><div class="info"><strong>' + esc(s.name) + '</strong>';
+        h += s.cancelled ? '<span class="meta">Cancelled ✔ saving ' + fmt(s.cost) + ' a month</span>' : '<span class="meta">' + fmt(s.cost) + ' / month · next bill ' + fmt_d(s.next) + '</span>';
+        h += '</div>';
+        if (s.cancelled) h += '<button type="button" class="btn ghost" id="undo-' + s.id + '" data-action="sub-undo" data-id="' + s.id + '" aria-label="Undo cancel ' + esc(s.name) + '">Undo</button>';
+        else if (ui.confirmSub === s.id) h += '<div class="confirm" role="group" aria-label="Confirm cancel"><p>Cancel ' + esc(s.name) + '? You will save ' + fmt(s.cost) + ' a month.</p><div class="row"><button type="button" class="btn danger" id="yes-' + s.id + '" data-action="sub-yes" data-id="' + s.id + '">Yes, cancel it</button><button type="button" class="btn ghost" data-action="sub-keep">Keep it</button></div></div>';
+        else h += '<button type="button" class="btn ghost" id="cancel-' + s.id + '" data-action="sub-cancel" data-id="' + s.id + '" aria-label="Cancel ' + esc(s.name) + '">Cancel</button>';
+        return h + '</li>';
+      }).join('') || '<li class="hint">No subscriptions. Nice and tidy! 🧹</li>';
+    }
+    function fmt_d(s) { return fmtDate(s); }
+
+    function msgFor(p, pct) {
+      if (pct >= 100) return 'Goal reached! ' + p.icon + ' Time to celebrate 🎉';
+      if (pct >= 75) return 'Nearly there, only ' + (100 - pct) + '% to go for your ' + p.name + '! 🚀';
+      if (pct >= 50) return 'Over halfway to your ' + p.name + '! ' + p.icon;
+      if (pct >= 25) return 'Great start, a quarter of the way there! 💪';
+      if (pct > 0) return 'Every pound counts, you have started! 🌱';
+      return 'Add your first pounds and the journey begins ✨';
+    }
+    function moneyForm(form, id, label, btn) {
+      return '<form data-form="' + form + '" data-id="' + id + '" novalidate><label for="' + form + '-' + id + '">' + label + '</label><div class="row"><div class="grow"><input type="text" id="' + form + '-' + id + '" data-money inputmode="decimal" autocomplete="off" placeholder="0.00" /></div><button type="submit" class="btn">' + btn + '</button></div><p class="err" role="alert"></p></form>';
+    }
+    function renderPots() {
+      $('#pots').innerHTML = state.pots.map(function (p) {
+        var open = ui.open === p.id, pct = pctOf(p);
+        var h = '<article class="pot' + (p.emergency ? ' em' : '') + '"><h3><button type="button" class="pot-toggle" id="pot-btn-' + p.id + '" data-action="toggle-pot" data-id="' + p.id + '" aria-expanded="' + open + '" aria-controls="pot-body-' + p.id + '"><span class="pot-icon" aria-hidden="true">' + esc(p.icon) + '</span><span class="pot-name">' + esc(p.name) + (p.goal ? ' <small>(' + pct + '%)</small>' : '') + '</span><span class="pot-bal">' + fmt(p.balance) + '</span><span class="chev" aria-hidden="true">▾</span></button></h3>';
+        if (open) {
+          h += '<div class="pot-body" id="pot-body-' + p.id + '">';
+          if (p.emergency) {
+            var weeks = state.weeklyCosts ? Math.floor(p.balance / state.weeklyCosts * 10) / 10 : 0;
+            h += '<p class="warn">⚠️ Emergency only! This is your safety net for real surprises. You can take out up to 25% of the fund (' + fmt(Math.floor(p.balance * 0.25)) + ' right now) each time, and we will ask why and make you wait 5 seconds to be sure.</p><p class="msg">Covers about ' + NUM1.format(weeks) + ' weeks of essentials. Aim for 3+ weeks.</p>';
+          } else if (p.goal) {
+            h += '<div><div class="bar" role="progressbar" aria-label="' + esc(p.name) + ' goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div><p class="msg">' + pct + '% complete. ' + esc(msgFor(p, pct)) + '</p><p class="hint">Goal ' + fmt(p.goal.target) + (p.goal.date ? ' by ' + fmtDate(p.goal.date, true) : '') + ' · ' + fmt(Math.max(0, p.goal.target - p.balance)) + ' to go</p></div>';
+          } else h += '<p class="hint">No goal yet. Set one below to track your progress 🎯</p>';
+          h += '<div class="actions">';
+          h += '<div class="act"><h4>Add money</h4>' + moneyForm('add', p.id, 'Amount (£), taken from your spending balance', 'Add') + '</div>';
+          if (p.emergency) h += '<div class="act"><h4>Withdraw money</h4><p class="hint">Emergency only. You will be asked for a reason.</p><button type="button" class="btn danger" id="em-open" data-action="em-open">Withdraw in an emergency</button></div>';
+          else h += '<div class="act"><h4>Withdraw money</h4>' + moneyForm('withdraw', p.id, 'Amount (£), goes back to your spending balance', 'Withdraw') + '</div>';
+          if (p.emergency) h += '<div class="act"><h4>Name and icon</h4><p class="hint">🔒 The Emergency Fund name and icon are locked, so it can never be deleted.</p></div>';
+          else {
+            h += '<div class="act"><h4>Rename pot</h4><form data-form="rename" data-id="' + p.id + '" novalidate><label for="rename-' + p.id + '">New name</label><div class="row"><div class="grow"><input type="text" id="rename-' + p.id + '" maxlength="24" value="' + esc(p.name) + '" autocomplete="off" /></div><button type="submit" class="btn">Save</button></div><p class="err" role="alert"></p></form></div>';
+            h += '<div class="act"><h4>Change icon</h4><div class="emoji-grid" role="group" aria-label="Pick an icon">' + POT_ICONS.map(function (e) { return '<button type="button" data-action="icon" data-id="' + p.id + '" data-icon="' + e + '" aria-pressed="' + (e === p.icon) + '" aria-label="Icon ' + e + '">' + e + '</button>'; }).join('') + '</div></div>';
+            h += '<div class="act"><h4>' + (p.goal ? 'Edit goal' : 'Set a goal') + '</h4><form data-form="goal" data-id="' + p.id + '" novalidate><div class="row"><div class="grow"><label for="goal-' + p.id + '">Target (£)</label><input type="text" id="goal-' + p.id + '" data-money inputmode="decimal" autocomplete="off" value="' + (p.goal ? toInput(p.goal.target) : '') + '" /></div><div class="grow"><label for="gd-' + p.id + '">Target date (optional)</label><input type="date" id="gd-' + p.id + '" min="' + today() + '" value="' + (p.goal && p.goal.date ? p.goal.date : '') + '" /></div></div><div class="row" style="margin-top:8px"><button type="submit" class="btn">Save goal</button>' + (p.goal ? '<button type="button" class="btn ghost" data-action="rm-goal" data-id="' + p.id + '">Remove goal</button>' : '') + '</div><p class="err" role="alert"></p></form></div>';
+            if (ui.confirm === 'del:' + p.id) h += '<div class="confirm act" role="group" aria-label="Confirm delete"><p>Delete ' + esc(p.name) + '? ' + (p.balance ? 'The ' + fmt(p.balance) + ' goes back to your spending balance.' : 'It is empty.') + '</p><div class="row"><button type="button" class="btn danger" id="del-yes" data-action="delete-yes" data-id="' + p.id + '">Yes, delete</button><button type="button" class="btn ghost" data-action="delete-no" data-id="' + p.id + '">Keep it</button></div></div>';
+            else h += '<div class="act"><h4>Delete pot</h4><button type="button" class="btn danger ghost" id="del-' + p.id + '" data-action="delete" data-id="' + p.id + '">Delete this pot</button></div>';
+          }
+          h += '</div></div>';
+        }
+        return h + '</article>';
+      }).join('');
+    }
+
+    /* ---------- coach ---------- */
+    function goals() { return state.pots.filter(function (p) { return p.goal && p.balance < p.goal.target; }); }
+    function weeklyFor(p) {
+      if (!p.goal || !p.goal.date) return null;
+      var wk = Math.ceil((parseISO(p.goal.date) - new Date()) / (7 * DAY));
+      if (wk <= 0) return { late: true };
+      return { weeks: wk, amt: Math.ceil((p.goal.target - p.balance) / wk) };
+    }
+    function tips() {
+      var out = [], em = pot('emergency'), recent = state.history.filter(function (h) { return h.date >= addDays(-30); }).length;
+      if (recent >= 3) out.push({ k: 'good', t: 'You have topped up ' + recent + ' times this month. That habit is your superpower! 🌟' });
+      else out.push({ k: 'tip', t: recent ? 'You topped up ' + recent + ' time(s) this month. Try a little each week, even £5 counts! 💪' : 'No top-ups this month yet. Even £5 today is a brilliant start! 🌱' });
+      if (em && state.weeklyCosts) {
+        var w = em.balance / state.weeklyCosts, need = Math.max(0, state.weeklyCosts * 3 - em.balance);
+        if (w >= 3) out.push({ k: 'good', t: 'Your Emergency Fund covers ' + NUM1.format(Math.floor(w * 10) / 10) + ' weeks of costs, above the 3 week target. Safety net secured! 🛟' });
+        else out.push({ k: 'tip', t: 'Your Emergency Fund covers ' + NUM1.format(Math.floor(w * 10) / 10) + ' weeks. Add ' + fmt(need) + ' to reach 3 weeks of cover. 🛟' });
+      }
+      state.pots.forEach(function (p) {
+        if (!p.goal) return;
+        var pc = pctOf(p);
+        if (pc >= 100) { out.push({ k: 'good', t: p.icon + ' ' + p.name + ' goal reached! Amazing work! 🎉' }); return; }
+        if (pc >= 50) out.push({ k: 'good', t: p.name + ' is ' + pc + '% there. Past halfway, keep going! ' + p.icon });
+        var wf = weeklyFor(p);
+        if (wf && wf.late) out.push({ k: 'tip', t: 'The date for ' + p.name + ' has passed. Pick a new date that feels doable. 📅' });
+        else if (wf && p.created) {
+          var elapsed = (Date.now() - p.created) / (parseISO(p.goal.date) - p.created);
+          if (p.balance / p.goal.target < elapsed - 0.05) out.push({ k: 'tip', t: p.name + ' is a bit behind schedule. Saving ' + fmt(wf.amt) + ' a week would get you there by ' + fmtDate(p.goal.date) + '. ' + p.icon });
+        }
+      });
+      activeSubs().filter(function (s) { return s.unused >= 30; }).forEach(function (s) {
+        out.push({ k: 'tip', t: 'You have not used ' + s.name + ' for ' + s.unused + ' days. Cancelling saves ' + fmt(s.cost) + ' a month (' + fmt(s.cost * 12) + ' a year). ✂️' });
+      });
+      if (saved()) out.push({ k: 'good', t: 'Cancelled subscriptions are saving you ' + fmt(saved()) + ' a month. Nice one! 💸' });
+      return out;
+    }
+    function answer(q) {
+      var g = goals().sort(function (a, b) { return pctOf(b) - pctOf(a); })[0], un = activeSubs().filter(function (s) { return s.unused >= 30; });
+      if (q === 'faster') {
+        if (!g) return 'Set a goal on one of your pots first, then I can build a plan with you! 🎯';
+        var wf = weeklyFor(g), left = g.goal.target - g.balance, s = 'For ' + g.name + ' you need ' + fmt(left) + ' more. ';
+        s += wf && !wf.late ? 'Saving ' + fmt(wf.amt) + ' a week gets you there by ' + fmtDate(g.goal.date) + '. ' : 'Saving £10 a week would take about ' + Math.ceil(left / 1000) + ' weeks. ';
+        if (un.length) s += 'Cancelling ' + un[0].name + ' frees up ' + fmt(un[0].cost) + ' a month too!';
+        return s;
+      }
+      if (q === 'subs') {
+        if (un.length) return un.map(function (s) { return s.name + ' (unused ' + s.unused + ' days, ' + fmt(s.cost) + '/month)'; }).join('; ') + '. Those are the best ones to cancel. ✂️';
+        var a = activeSubs().sort(function (x, y) { return y.cost - x.cost; })[0];
+        return a ? 'Nothing looks unused. Your biggest one is ' + a.name + ' at ' + fmt(a.cost) + ' a month, so ask if you still love it. 🤔' : 'You have no subscriptions. Wow! 🧹';
+      }
+      if (q === 'emergency') {
+        var em = pot('emergency'), w = state.weeklyCosts ? em.balance / state.weeklyCosts : 0;
+        return 'Your Emergency Fund has ' + fmt(em.balance) + ', about ' + NUM1.format(Math.floor(w * 10) / 10) + ' weeks of essentials. ' + (w >= 3 ? 'That is above the 3 week goal. 🛟' : 'Try to add ' + fmt(Math.max(0, state.weeklyCosts * 3 - em.balance)) + ' to reach 3 weeks.');
+      }
+      return 'Try this: put £2 in a pot every day this week. That is £14 by Sunday! Tell me how it goes. 🏆';
+    }
+    function renderCoach() {
+      var h = tips().slice(0, 7).map(function (t) { return '<div class="bubble-row"><span class="avatar" aria-hidden="true">🦊</span><p class="bubble ' + (t.k === 'good' ? 'good' : 'tip-b') + '"><strong>' + (t.k === 'good' ? 'Going well: ' : 'Idea: ') + '</strong>' + esc(t.t) + '</p></div>'; }).join('');
+      h += ui.chat.map(function (c) { return c.me ? '<div class="bubble-row me"><p class="bubble mine">' + esc(c.t) + '</p></div>' : '<div class="bubble-row"><span class="avatar" aria-hidden="true">🦊</span><p class="bubble">' + esc(c.t) + '</p></div>'; }).join('');
+      $('#coachLog').innerHTML = h;
+    }
+
+    /* ---------- celebrate ---------- */
+    function celebrate() {
+      state.pots.forEach(function (p) {
+        if (!p.goal) return;
+        var done = p.balance >= p.goal.target;
+        if (done && !p.celebrated) { p.celebrated = true; say('Goal reached for ' + p.name + '! Congratulations!'); confetti(); }
+        else if (!done) p.celebrated = false;
+      });
+    }
+    function confetti() {
+      if (reduce.matches) return;
+      var c = document.createElement('div'); c.className = 'confetti'; c.setAttribute('aria-hidden', 'true');
+      for (var i = 0; i < 60; i++) {
+        var e = document.createElement('i');
+        e.style.left = Math.random() * 100 + '%'; e.style.background = COLOURS[i % 8]; e.style.animationDelay = Math.random() * .6 + 's';
+        c.appendChild(e);
+      }
+      document.body.appendChild(c); setTimeout(function () { c.remove(); }, 3500);
+    }
+    function commit(msg) { celebrate(); save(); render(); if (msg) say(msg); }
+
+    /* ---------- helpers for forms ---------- */
+    function fail(form, msg, input) {
+      var e = $('.err', form); e.textContent = msg;
+      if (input) { input.setAttribute('aria-invalid', 'true'); input.setAttribute('aria-describedby', e.id || (e.id = uid())); input.focus(); }
+    }
+    function cleanName(v) { return v.replace(/\s+/g, ' ').trim(); }
+
+    /* ---------- events ---------- */
+    document.addEventListener('input', function (e) {
+      var t = e.target;
+      if (t.matches && t.matches('[data-money]')) { var v = sanitizeMoney(t.value); if (v !== t.value) t.value = v; }
+      if (t.closest && t.closest('.feat, dialog')) { t.removeAttribute('aria-invalid'); var f = t.closest('form'); if (f && f.id !== 'emForm') { var er = $('.err', f); if (er) er.textContent = ''; } }
+    });
+    document.addEventListener('keydown', function (e) {
+      var t = e.target;
+      if (t.matches && t.matches('[data-money]') && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !/[\d.]/.test(e.key)) e.preventDefault();
+    });
+    document.addEventListener('paste', function (e) {
+      var t = e.target;
+      if (t.matches && t.matches('[data-money]')) { e.preventDefault(); var txt = (e.clipboardData || window.clipboardData).getData('text'); t.value = sanitizeMoney(t.value + txt); }
+    });
+
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-action]');
+      if (!b || !b.closest('#app')) return;
+      var a = b.getAttribute('data-action'), id = b.getAttribute('data-id'), p = id && pot(id);
+      if (a === 'flip') return flip();
+      if (a === 'reset') { $('#resetConfirm').hidden = false; return $('[data-action="reset-yes"]').focus(); }
+      if (a === 'reset-no') { $('#resetConfirm').hidden = true; return $('#resetBtn').focus(); }
+      if (a === 'reset-yes') { state = seed(); ui.open = ui.confirm = ui.confirmSub = null; ui.chat = []; $('#resetConfirm').hidden = true; save(); render(); $('#resetBtn').focus(); return say('Demo data reset'); }
+      if (a === 'toggle-pot') { ui.open = ui.open === id ? null : id; ui.confirm = null; return renderPots(), $('#pot-btn-' + id).focus(); }
+      if (a === 'toggle-newpot') {
+        var f = $('#newPotForm'), open = f.style.display === 'none';
+        f.style.display = open ? 'grid' : 'none'; b.setAttribute('aria-expanded', open);
+        if (open) $('#np-name').focus();
+        return;
+      }
+      if (a === 'pick') { return pick(b); }
+      if (a === 'icon' && p) { p.icon = b.getAttribute('data-icon'); save(); render(); return say('Icon changed'); }
+      if (a === 'delete') { ui.confirm = 'del:' + id; renderPots(); return $('#del-yes').focus(); }
+      if (a === 'delete-no') { ui.confirm = null; renderPots(); return $('#del-' + id).focus(); }
+      if (a === 'delete-yes' && p) {
+        state.balance += p.balance; state.pots = state.pots.filter(function (x) { return x !== p; }); ui.open = ui.confirm = null;
+        commit(p.name + ' deleted. ' + fmt(p.balance) + ' returned to your spending balance.'); return $('#potsTitle').scrollIntoView({ block: 'nearest' });
+      }
+      if (a === 'rm-goal' && p) { p.goal = null; p.celebrated = false; return commit('Goal removed'); }
+      if (a === 'em-open') return openEm();
+      if (a === 'sub-cancel') { ui.confirmSub = id; renderSubs(); return $('#yes-' + id).focus(); }
+      if (a === 'sub-keep') { var cid = ui.confirmSub; ui.confirmSub = null; renderSubs(); var cb = $('#cancel-' + cid); return cb && cb.focus(); }
+      if (a === 'sub-yes') { var s = subById(id); s.cancelled = true; ui.confirmSub = null; commit(s.name + ' cancelled. You save ' + fmt(s.cost) + ' a month.'); var u = $('#undo-' + id); return u && u.focus(); }
+      if (a === 'sub-undo') { var s2 = subById(id); s2.cancelled = false; commit(s2.name + ' is back on.'); return $('#cancel-' + id).focus(); }
+      if (a === 'ask') {
+        ui.chat.push({ me: true, t: b.textContent }); ui.chat.push({ t: answer(b.getAttribute('data-q')) }); renderCoach();
+        var l = $('#coachLog'); l.scrollTop = l.scrollHeight; return;
+      }
+    });
+    function subById(id) { return state.subs.filter(function (s) { return s.id === id; })[0]; }
+    function pick(btn) {
+      var grid = btn.closest('[data-picker]');
+      $('#' + grid.getAttribute('data-target')).value = btn.getAttribute('data-icon');
+      Array.prototype.forEach.call(grid.children, function (c) { c.setAttribute('aria-pressed', c === btn); });
+    }
+    function buildPicker() {
+      $('#np-icons').innerHTML = POT_ICONS.map(function (e) { return '<button type="button" data-action="pick" data-icon="' + e + '" aria-pressed="false" aria-label="Icon ' + e + '">' + e + '</button>'; }).join('');
+    }
+    function setPicker(icon) {
+      $('#np-icon').value = icon;
+      Array.prototype.forEach.call($('#np-icons').children, function (c) { c.setAttribute('aria-pressed', c.getAttribute('data-icon') === icon); });
+    }
+    $('#np-tpl').addEventListener('change', function () {
+      var t = TEMPLATES[this.value]; setPicker(t.icon); $('#np-target').value = t.target;
+      if (!$('#np-name').value || Object.keys(TEMPLATES).some(function (k) { return TEMPLATES[k].name === $('#np-name').value; })) $('#np-name').value = t.name;
+    });
+
+    document.addEventListener('submit', function (e) {
+      var f = e.target.closest('[data-form]');
+      if (!f) return;
+      e.preventDefault();
+      var kind = f.getAttribute('data-form'), p = pot(f.getAttribute('data-id')), inp = $('input[data-money]', f), m;
+      if (kind === 'add' || kind === 'withdraw') {
+        m = parseMoney(inp.value); if (m.err) return fail(f, m.err, inp);
+        if (kind === 'add') {
+          if (m.pence > state.balance) return fail(f, 'You only have ' + fmt(state.balance) + ' in your spending balance.', inp);
+          state.balance -= m.pence; p.balance += m.pence; state.history.push({ date: today(), amount: m.pence });
+          return commit(fmt(m.pence) + ' added to ' + p.name + '. Brilliant!');
+        }
+        if (m.pence > p.balance) return fail(f, 'You only have ' + fmt(p.balance) + ' in this pot.', inp);
+        p.balance -= m.pence; state.balance += m.pence;
+        return commit(fmt(m.pence) + ' moved from ' + p.name + ' to your spending balance.');
+      }
+      if (kind === 'rename') {
+        var n = cleanName($('input', f).value);
+        if (!n) return fail(f, 'Give your pot a name 🙂', $('input', f));
+        p.name = n; return commit('Renamed to ' + n);
+      }
+      if (kind === 'goal') {
+        m = parseMoney(inp.value); if (m.err) return fail(f, m.err, inp);
+        var d = $('input[type=date]', f).value;
+        if (d && d < today()) return fail(f, 'Pick a date that is today or later.', $('input[type=date]', f));
+        p.goal = { target: m.pence, date: d || null }; p.created = p.created || Date.now(); p.celebrated = false;
+        return commit('Goal saved for ' + p.name);
+      }
+      if (kind === 'newpot') {
+        var nm = cleanName($('#np-name').value), tg = $('#np-target').value, dt = $('#np-date').value, goal = null;
+        if (!nm) return fail(f, 'Give your pot a name 🙂', $('#np-name'));
+        if (state.pots.length >= 12) return fail(f, 'That is plenty of pots! Delete one before adding another.');
+        if (tg) { m = parseMoney(tg); if (m.err) return fail(f, m.err, $('#np-target')); goal = { target: m.pence, date: null };
+          if (dt) { if (dt < today()) return fail(f, 'Pick a date that is today or later.', $('#np-date')); goal.date = dt; } }
+        var np = { id: uid(), name: nm, icon: $('#np-icon').value || '✨', balance: 0, goal: goal, created: Date.now(), c: state.nextColour++ };
+        state.pots.push(np); ui.open = np.id;
+        f.reset(); setPicker('✨'); f.style.display = 'none'; $('#newPotBtn').setAttribute('aria-expanded', 'false');
+        commit(nm + ' pot created!'); return $('#pot-btn-' + np.id).focus();
+      }
+      if (kind === 'newsub') {
+        var sn = cleanName($('#ns-name').value), sd = $('#ns-date').value;
+        if (!sn) return fail(f, 'Give the subscription a name.', $('#ns-name'));
+        m = parseMoney($('#ns-cost').value); if (m.err) return fail(f, m.err, $('#ns-cost'));
+        if (!sd) return fail(f, 'Pick the next billing date.', $('#ns-date'));
+        state.subs.push({ id: uid(), name: sn, icon: $('#ns-icon').value, cost: m.pence, next: sd, cancelled: false, unused: 0, c: state.nextColour++ });
+        f.reset(); $('#ns-date').value = today(); commit(sn + ' added.');
+      }
+    });
+
+    /* ---------- emergency withdrawal ---------- */
+    var emTimer = null, emReady = false;
+    var dlg = $('#emDialog');
+    function emReset() { clearInterval(emTimer); emReady = false; $('#emConfirm').disabled = true; $('#emStart').disabled = false; $('#emStart').textContent = 'Start 5-second wait'; $('#emStatus').textContent = ''; }
+    function emCheck() {
+      var em = pot('emergency'), max = Math.floor(em.balance * 0.25), reason = cleanName($('#em-reason').value), m = parseMoney($('#em-amt').value);
+      if (reason.length < 3) return { err: 'Please tell us why you need it (at least 3 letters).', el: $('#em-reason') };
+      if (m.err) return { err: m.err, el: $('#em-amt') };
+      if (m.pence > max) return { err: 'You can take at most ' + fmt(max) + ' at a time (25% of the fund).', el: $('#em-amt') };
+      return { pence: m.pence };
+    }
+    function openEm() {
+      var em = pot('emergency');
+      $('#emRules').textContent = 'Emergency only! You can take up to ' + fmt(Math.floor(em.balance * 0.25)) + ' (25% of ' + fmt(em.balance) + ') each time. Tell us why, then wait 5 seconds to make sure.';
+      $('#em-reason').value = ''; $('#em-amt').value = ''; $('#emErr').textContent = ''; emReset();
+      dlg.showModal(); $('#em-reason').focus();
+    }
+    ['#em-reason', '#em-amt'].forEach(function (s) { $(s).addEventListener('input', emReset); });
+    $('#emStart').addEventListener('click', function () {
+      var c = emCheck(); $('#emErr').textContent = c.err || '';
+      if (c.err) return c.el.focus();
+      var n = 5; this.disabled = true; $('#emStatus').textContent = 'Wait ' + n + ' seconds. Is this really an emergency?'; this.textContent = 'Waiting… ' + n;
+      var btn = this;
+      emTimer = setInterval(function () {
+        n--; btn.textContent = 'Waiting… ' + n;
+        if (n <= 0) { clearInterval(emTimer); emReady = true; $('#emConfirm').disabled = false; btn.textContent = 'Wait finished'; $('#emStatus').textContent = 'You can now confirm your withdrawal.'; $('#emConfirm').focus(); }
+        else if (n <= 2) $('#emStatus').textContent = n + '…';
+      }, 1000);
+    });
+    $('#emForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!emReady) return;
+      var c = emCheck(); $('#emErr').textContent = c.err || '';
+      if (c.err) return c.el.focus();
+      var em = pot('emergency'); em.balance -= c.pence; state.balance += c.pence;
+      dlg.close(); ui.open = 'emergency'; commit(fmt(c.pence) + ' moved from your Emergency Fund. Take care of yourself!'); $('#pot-btn-emergency').focus();
+    });
+    $('#emCancel').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('close', function () { emReset(); var b = $('#em-open'); if (b) b.focus(); });
+
+    /* ---------- init ---------- */
+    buildPicker(); setPicker('✨');
+    $('#ns-date').value = today();
+    applyFlip();
+    render();
+    reduce.addEventListener && reduce.addEventListener('change', function () {});
+  })();
+  </script>
 </body>
 </html>
