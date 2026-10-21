@@ -80,6 +80,29 @@
 
     .header-actions { display: flex; align-items: center; gap: 10px; }
 
+    .nav { display: flex; gap: 8px; }
+    .nav-btn {
+      border: 2px solid transparent;
+      border-radius: 100px;
+      background: transparent;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85em;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-btn:hover { background: var(--accent-light); }
+    .nav-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .nav-btn.active, .nav-btn[aria-expanded="true"] { background: #4B43C8; color: #FFFFFF; }
+    .panel[hidden] { display: none; }
+    @media (max-width: 600px) {
+      .app-header { height: auto; flex-wrap: wrap; gap: 8px; padding: 10px 16px; }
+      .nav { order: 3; width: 100%; justify-content: center; }
+      .nav-btn { flex: 1; padding: 10px 8px; }
+    }
+
     /* MAKEOVER? These buttons are small and have no hover or focus style. */
     .icon-btn {
       width: 28px; height: 28px;
@@ -119,6 +142,7 @@
       color: white;
       position: relative;
       overflow: hidden;
+      text-align: center;
     }
 
     .balance-hero::before {
@@ -162,7 +186,9 @@
     .balance-footer {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
       position: relative; z-index: 1;
     }
 
@@ -314,6 +340,7 @@
       background: var(--bg);
       outline: none;
     }
+    input:focus-visible { border-color: var(--accent); outline: 3px solid var(--accent); outline-offset: 2px; }
 
     .btn {
       display: block;
@@ -327,7 +354,7 @@
       letter-spacing: 0.02em;
       background: var(--accent);
       color: white;
-      cursor: default;
+      cursor: pointer;
     }
 
     .btn-ghost {
@@ -380,11 +407,14 @@
 
   <header class="app-header">
     <div class="app-logo">nova<span>pay</span></div>
+    <nav class="nav" aria-label="Main">
+      <button type="button" class="nav-btn" id="nav-withdraw" aria-expanded="false" aria-controls="panel-withdraw" data-panel="panel-withdraw">Withdraw Funds</button>
+      <button type="button" class="nav-btn" id="nav-interest" aria-expanded="false" aria-controls="panel-interest" data-panel="panel-interest">Interest Calculator</button>
+    </nav>
     <div class="header-actions">
-      <!-- MAKEOVER? What would a screen reader say about these buttons? -->
-      <button class="icon-btn">🔔</button>
-      <button class="icon-btn">⚙️</button>
-      <div class="avatar">AC</div>
+      <button class="icon-btn" aria-label="Notifications">🔔</button>
+      <button class="icon-btn" aria-label="Settings">⚙️</button>
+      <div class="avatar" role="img" aria-label="Alex Chen">AC</div>
     </div>
   </header>
 
@@ -398,7 +428,7 @@
         <div class="account-name">Alex Chen · Current Account</div>
         <div class="account-pill">•••• 4821</div>
       </div>
-
+    </div>
 
     <!-- Money in / out summary -->
     <div class="stats-row">
@@ -408,7 +438,7 @@
       </div>
       <div class="stat-card">
         <div class="stat-label">Money Out</div>
-        <div class="stat-value outgo">−£56.27</div>
+        <div class="stat-value outgo" id="money-out">−£56.27</div>
       </div>
     </div>
 
@@ -461,50 +491,52 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">Withdraw Funds</div>
+    <div class="card panel" id="panel-withdraw" hidden>
+      <h2 class="card-title">Withdraw Funds</h2>
 
       <div class="field">
         <label class="field-label" for="withdraw-amount">Amount</label>
         <div class="input-wrap">
           <span class="input-prefix">£</span>
-          <input type="text" id="withdraw-amount" placeholder="0.00">
+          <input type="text" id="withdraw-amount" inputmode="decimal" min="0" step="0.01" autocomplete="off" placeholder="0.00">
         </div>
       </div>
 
-      <button class="btn" onlick="makeWithdrawal()">Withdraw</button>
+      <button class="btn" type="button" onclick="makeWithdrawal()">Withdraw</button>
 
       <!-- MAKEOVER? Do these messages work for someone who can't see colour? -->
-      <div class="alert alert-ok"  id="wd-success"></div>
-      <div class="alert alert-err" id="wd-error"></div>
+      <div class="alert alert-ok"  id="wd-success" role="status" aria-live="polite"></div>
+      <div class="alert alert-err" id="wd-error" role="alert"></div>
     </div>
 
-    <div class="card">
-      <div class="card-title">Interest Calculator</div>
+    <div class="card panel" id="panel-interest" hidden>
+      <h2 class="card-title">Interest Calculator</h2>
       <p style="font-size:0.85em;color:var(--muted);margin-bottom:16px;">
         Find out how much your savings could earn over 12 months.
       </p>
 
       <div class="two-col">
         <div class="field">
-          <label class="field-label">Amount</label>
+          <label class="field-label" for="int-amount">Amount</label>
           <div class="input-wrap">
             <span class="input-prefix">£</span>
-            <input type="number" id="int-amount" placeholder="1000">
+            <input type="number" id="int-amount" min="0" step="0.01" placeholder="1000">
           </div>
         </div>
         <div class="field">
-          <label class="field-label">Interest Rate</label>
+          <label class="field-label" for="int-rate">Interest Rate</label>
           <div class="input-wrap">
             <span class="input-prefix">%</span>
-            <input type="number" id="int-rate" placeholder="4.5">
+            <input type="number" id="int-rate" min="0" step="0.01" placeholder="4.5">
           </div>
         </div>
       </div>
 
-      <button class="btn btn-ghost" onclick="calculateInterest()">Calculate</button>
+      <button class="btn btn-ghost" type="button" onclick="calculateInterest()">Calculate</button>
 
-      <div class="result-box" id="int-result-box">
+      <div class="alert alert-err" id="int-error" role="alert"></div>
+
+      <div class="result-box" id="int-result-box" aria-live="polite">
         <div class="result-eyebrow">Interest earned over 12 months</div>
         <div class="result-figure" id="int-result-figure"></div>
       </div>
@@ -514,6 +546,64 @@
 
   <script>
     let balance = 1250;
+    let moneyOut = 56.27;
+
+    const gbp = n => n.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' });
+
+    const navButtons = document.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.panel);
+      const opening = panel.hidden;
+      document.querySelectorAll('.panel').forEach(p => { p.hidden = true; });
+      navButtons.forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+        b.classList.remove('active');
+        b.removeAttribute('aria-current');
+      });
+      if (opening) {
+        panel.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-current', 'page');
+        btn.classList.add('active');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const first = panel.querySelector('input');
+        if (first) first.focus({ preventScroll: true });
+      }
+    }));
+
+    // Keep only digits and one decimal point (max decimals as given)
+    function cleanDecimal(value, maxDecimals) {
+      let out = value.replace(/[^0-9.]/g, '');
+      const dot = out.indexOf('.');
+      if (dot !== -1) {
+        out = out.slice(0, dot + 1) + out.slice(dot + 1).replace(/\./g, '').slice(0, maxDecimals);
+      }
+      return out;
+    }
+
+    const withdrawInput = document.getElementById('withdraw-amount');
+    withdrawInput.addEventListener('input', () => {
+      const cleaned = cleanDecimal(withdrawInput.value, 2);
+      if (cleaned !== withdrawInput.value) withdrawInput.value = cleaned;
+    });
+
+    ['int-amount', 'int-rate'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('keydown', e => {
+        if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
+      });
+      el.addEventListener('paste', e => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        const cleaned = cleanDecimal(text, 2);
+        if (cleaned) el.value = cleaned;
+      });
+    });
+
+    function showError(el, msg) {
+      el.textContent = '⚠ Error: ' + msg;
+      el.style.display = 'block';
+    }
 
     function makeWithdrawal() {
       const successEl = document.getElementById("wd-success");
@@ -522,30 +612,56 @@
       successEl.style.display = "none";
       errorEl.style.display   = "none";
 
-      const amount = parseFloat(document.getElementById("withdraw-amount").value);
+      const raw = withdrawInput.value.trim();
+      const amount = parseFloat(raw);
 
-      // Update the balance
-      balance = balance + amount;
+      if (raw === "" || isNaN(amount)) {
+        showError(errorEl, "Please enter an amount to withdraw.");
+        return;
+      }
+      if (amount <= 0) {
+        showError(errorEl, "Amount must be greater than £0.00.");
+        return;
+      }
+      if (amount > balance) {
+        showError(errorEl, "You can't withdraw more than your balance of " + gbp(balance) + ".");
+        return;
+      }
 
-      // Show the new balance on the hero card
-      document.getElementById("balence-display").textContent =
-        "£" + balance.toFixed(2);
+      balance = Math.round((balance - amount) * 100) / 100;
+      moneyOut = Math.round((moneyOut + amount) * 100) / 100;
 
-      successEl.style.display  = "block";
-      successEl.textContent    =
-        "Withdrawn £" + amount.toFixed(2) + ". New balance: £" + balance.toFixed(2);
+      document.getElementById("balance-display").textContent = gbp(balance);
+      document.getElementById("money-out").textContent = "−" + gbp(moneyOut);
+
+      successEl.style.display = "block";
+      successEl.textContent   =
+        "✔ Success: withdrawn " + gbp(amount) + ". New balance: " + gbp(balance);
+      withdrawInput.value = "";
     }
 
     function calculateInterest() {
+      const errorEl = document.getElementById("int-error");
+      const box     = document.getElementById("int-result-box");
+      errorEl.style.display = "none";
+      box.style.display     = "none";
+
       const principal = parseFloat(document.getElementById("int-amount").value);
       const rate      = parseFloat(document.getElementById("int-rate").value);
 
-      const interest = principal * rate * 12;
+      if (isNaN(principal) || isNaN(rate)) {
+        showError(errorEl, "Please enter both an amount and an interest rate.");
+        return;
+      }
+      if (principal <= 0 || rate <= 0) {
+        showError(errorEl, "Amount and rate must be greater than 0.");
+        return;
+      }
 
-      const box = document.getElementById("int-result-box");
+      const interest = principal * (rate / 100);
+
       box.style.display = "block";
-      document.getElementById("int-result-figure").textContent =
-        "£" + interest.toFixed(2);
+      document.getElementById("int-result-figure").textContent = gbp(interest);
     }
   </script>
 
